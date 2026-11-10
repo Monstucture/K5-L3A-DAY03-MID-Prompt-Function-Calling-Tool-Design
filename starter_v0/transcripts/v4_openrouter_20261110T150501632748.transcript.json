@@ -1,0 +1,28 @@
+{
+  "transcript_id": "v4_openrouter_20261110T150501632748",
+  "version": "v4",
+  "artifact_version": "v4+p89dc4d92f92d+t444618bde9be",
+  "prompt_hash": "89dc4d92f92d89133113d78f9ee7f778c6db8fc421c254b49acec36dd02e832d",
+  "tools_hash": "444618bde9be6e6678ed121b44a279d251f38efaabe14741f7e8ddf233c4712c",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\monst\\OneDrive\\Desktop\\Git Repo\\K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\monst\\OneDrive\\Desktop\\Git Repo\\K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design\\starter_v0\\artifacts\\tools.yaml",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "created_at": "2026-11-10T15:05:01",
+  "updated_at": "2026-11-10T15:06:11",
+  "turns": [
+    {
+      "turn_index": 1,
+      "started_at": "2026-11-10T15:05:37",
+      "user": "Find the hotest news in tech today",
+      "status": "provider_error",
+      "assistant_text": null,
+      "rounds": [],
+      "tool_events": [],
+      "error": "APIStatusError: Error code: 402 - This request requires more credits, or fewer max_tokens. You requested up to 16384 tokens, but can only afford 15034. To increase, visit https://openrouter.ai/workspaces/default/keys/319af9c6b75f00d3e73ef049096cd3d177817b61ba5ab5a981707914f276086c and adjust the key's daily limit",
+      "ended_at": "2026-11-10T15:05:38"
+    }
+  ]
+}
