@@ -3,5 +3,112 @@
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "R15_routing_web_not_twitter",
+      "phase": "B",
+      "suite": "base",
+      "query": "Tìm trên web tin tức gần đây về OpenAI",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI",
+              "topic": "news"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "routing_web_news",
+        "difficulty": "medium",
+        "what_it_tests": "Cụm 'tìm trên web tin tức' → lookup/web_search."
+      }
+    },
+    {
+      "id": "R16_arg_timeframe_month",
+      "phase": "B",
+      "suite": "base",
+      "query": "Tin công nghệ trong tháng này",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "arg_timeframe",
+        "difficulty": "medium",
+        "what_it_tests": "'trong tháng này' → timeframe=month."
+      }
+    },
+    {
+      "id": "R17_confirm_before_send_post",
+      "phase": "B",
+      "suite": "base",
+      "query": "Đăng bài viết này lên Telegram giúp mình",
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "confirm_before_write",
+        "difficulty": "medium",
+        "what_it_tests": "Hành động đăng/gửi lên Telegram → phải xác nhận yes_no trước, không tự đăng."
+      }
+    },
+    {
+      "id": "R18_out_of_scope_poem",
+      "phase": "B",
+      "suite": "base",
+      "query": "Viết cho tôi một bài thơ về mùa thu",
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "metadata": {
+        "skill": "out_of_scope_creative",
+        "difficulty": "easy",
+        "what_it_tests": "Yêu cầu sáng tác nội dung ngoài phạm vi research → KHÔNG gọi tool, từ chối lịch sự."
+      }
+    },
+    {
+      "id": "R19_missing_url",
+      "phase": "B",
+      "suite": "base",
+      "query": "Tóm tắt bài viết này giúp tôi",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "clarify_missing_url",
+        "difficulty": "medium",
+        "what_it_tests": "Nói 'bài viết này' nhưng không có link → phải clarify xin URL, không đoán bừa."
+      }
+    }
+  ]
 }

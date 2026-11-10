@@ -1,0 +1,378 @@
+{
+  "run_id": "v3_B_group_openrouter_20261110T142852531686",
+  "version": "v3",
+  "artifact_version": "v3+p75910b24abd1+t8db0ba629f52",
+  "prompt_hash": "75910b24abd1acecaaeb566a4c8d74146f66fecd29556b56f4d0d60a3c7dfdb8",
+  "tools_hash": "8db0ba629f52ad1ec171bae4e4e84472c12f950fa1a6db5e1d27bad6e749b740",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "/Users/phucqn/Documents/Default Project/K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design/starter_v0/artifacts/system_prompt.md",
+  "tools": "/Users/phucqn/Documents/Default Project/K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design/starter_v0/artifacts/tools.yaml",
+  "eval_cases": "data/eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
+  "generated_at": "2026-11-10T14:28:52",
+  "summary": {
+    "total_cases": 5,
+    "measured_cases": 5,
+    "provider_error_cases": 0,
+    "passed_cases": 3,
+    "case_accuracy": 0.6,
+    "tool_routing_accuracy": 0.6,
+    "argument_accuracy": 0.6,
+    "multiturn_accuracy": null,
+    "failure_counts": {
+      "wrong_boundary": 1,
+      "missing_info": 1
+    },
+    "observed_mismatch_counts": {
+      "missing_tool_call": 2
+    }
+  },
+  "results": [
+    {
+      "id": "R15_routing_web_not_twitter",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_web_news",
+        "difficulty": "medium",
+        "what_it_tests": "Cụm 'tìm trên web tin tức' → lookup/web_search."
+      },
+      "input": "Tìm trên web tin tức gần đây về OpenAI",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI",
+              "topic": "news"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "OpenAI",
+            "topic": "news",
+            "timeframe": "day",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "OpenAI",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "OpenAI",
+                "url": "https://tavily.com/knowledge/company/p4PyTakV77G9",
+                "source": "tavily.com",
+                "summary": "# OpenAI\nID: p4PyTakV77G9\nWebsite: www.openai.com\nHeadquarters: San Francisco, CA, United States\nLinkedIn: www.linkedin.com/company/openai · 11,529,792 followers\nIndustry: Research Services\nIndustry codes: SIC 87, 873, NAICS 54, 541\nCompany type: Partnership\nSocial profiles: www.facebook.com/openai, www.twitter.com/openai, www.crunchbase.com/organization/openai, www.instagram.com/openai.gpt, www.instagram.com/openai, www.youtube.com/@openai, www.youtube.com/openai, github.com/openai [...] Description: OpenAI is a company that believes in research and development to lead to artificial general intelligence, a system that can solve human-level problems. [...] ## Products and services\nKeywords: research & development, emerging ai software, openai, artificial intelligence machine learning, artificial general intelligence, development, research, human-level problems, technology, application-software, artificial-intelligence, platform",
+                "score": 0.90593183
+              },
+              {
+                "title": "Australia to mandate AI breach reporting, create regulator after OpenAI breach | Reuters",
+                "url": "https://www.reuters.com/world/australia-tightens-ai-oversight-rules-after-openai-agent-breached-government-2026-11-10",
+                "source": "reuters.com",
+                "summary": "OpenAI has said it learned of the breach only in August ​and that the incident was unintentional. Its review found no evidence that patient records were accessed by ‌the ⁠agent.\n\nThe breach has added to friction between Australia and US technology companies, after Canberra refused ChatGPT maker OpenAI and rival Anthropic exemptions from copyright laws for model training, instead requiring them to negotiate licensing agreements with Australian rights holders. [...] The OpenAI agent gained unauthorised access to the medical statistics portal ​of Medicare, Australia's universal health insurance programme, while conducting research on public medical ​spending, the government said in September. The breach triggered a rapid ⁠government review into the incident.\n\nThe Misinformation Monitor newsletter rounds up international misinformation narratives, with a \"Real or Fake?\" quiz in every edition. Sign up here. [...] SYDNEY, Nov 10 (Reuters) - Australia will require artificial intelligence companies to report breaches ‌and consider changes to criminal law to address \"serious misconduct\", Prime Minister Anthony Albanese said on Tuesday, after an OpenAI agent broke into a government website.",
+                "score": 0.40924495
+              },
+              {
+                "title": "Australia tightens AI safety rules after OpenAI security breach",
+                "url": "https://www.yahoo.com/news/world/articles/australia-tightens-ai-safety-rules-063337023.html",
+                "source": "yahoo.com",
+                "summary": "FILE PHOTO - Australia's Prime Minister Anthony Albanese arrives back in Sydney after attending the United Nations General Assembly in New York. (is associated with: «Australia tightens AI safety rules after OpenAI security breach») Mick Tsikas/AAP/dpa\n\nAustralia is tightening safety rules for developers of advanced artificial intelligence (AI) systems following a serious security incident involving US technology company OpenAI earlier this year. [...] Advertisement\n\n\"We must make sure we shape AI, rather than AI shaping us,\" the government said in a joint statement.\n\n## OpenAI agent breached government website\n\nThe measures follow a June incident in which an autonomous OpenAI agent gained unauthorized access to an Australian government website providing statistics on the country's public health insurance system, Medicare. [...] Prime Minister Anthony Albanese announced six mandatory safety requirements on Tuesday, including a requirement for companies to report future incidents promptly.\n\nThe rules aim to ensure AI companies identify risks early, improve system security and respond transparently to problems. Independent safety assessments and the publication of safety plans will also become mandatory.\n\nAdvertisement\n\nAdvertisement\n\nAdvertisement\n\nAdvertisement",
+                "score": 0.4075462
+              },
+              {
+                "title": "OpenAI Backer Altimeter Targets More Than $3 Billion for Private Markets Funds - Bloomberg",
+                "url": "https://www.bloomberg.com/news/articles/2026-11-10/openai-backer-altimeter-targets-more-than-3-billion-for-private-markets-funds",
+                "source": "bloomberg.com",
+                "summary": "Altimeter Capital Management, a prominent OpenAI and Anthropic PBC investor, is raising a set of new funds for its private markets investment work. [...] Altimeter invested its last growth fund —a $1.6 billion vehicle closed last year — and a $1.5 billion expansion vehicle on financing rounds across the late stage market, including for OpenAI and Anthropic, according to a person familiar with the matter. The firm’s last growth fund backed only seven companies. Other firms, such as Founders Fund, have also deployed their growth funds into a small subset of companies.",
+                "score": 0.38525957
+              },
+              {
+                "title": "Australia to launch AI safety regulator after OpenAI’s breach of a government portal | The Seattle Times",
+                "url": "https://www.seattletimes.com/business/australia-to-launch-ai-safety-regulator-after-openais-breach-of-a-government-portal",
+                "source": "seattletimes.com",
+                "summary": "Skip to content\n\nBusiness\n\nBusiness\n\n Business\n Nation & World\n Technology\n\n# Australia to launch AI safety regulator after OpenAI’s breach of a government portal\n\nBy \n\nROD McGUIRK\n\nThe Associated Press\n\nMELBOURNE, Australia (AP) — Australia plans to create an artificial intelligence safety regulator in response to a breach of an Australian health department website by a rogue OpenAI agent in June, Prime Minister Anthony Albanese said Tuesday. [...] OpenAI apologized in September for the breach and its slow response.\n\n“We are sorry and working to do better in the future,” OpenAI said in a statement. “We also should have handled our response better.”\n\n## Inquiry recommends possible criminal law changes\n\nA government inquiry into the June breach made several recommendations including that the government consider changing the law. [...] Albanese told OpenAI chief executive Sam Altman that the U.S. company took too long to inform the government in September that a rogue agent had infiltrated government websites three months earlier, which was the first occurrence of such a breach with the technology.\n\nAdvertising\n\nInformation taken without authorization from the public-facing Medicare Statistics Reporting Service portal on June 18 has since been made public. It is not clear whether the portal breach broke any Australian laws.",
+                "score": 0.38276476
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R16_arg_timeframe_month",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_timeframe",
+        "difficulty": "medium",
+        "what_it_tests": "'trong tháng này' → timeframe=month."
+      },
+      "input": "Tin công nghệ trong tháng này",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "tin công nghệ",
+              "topic": "news",
+              "timeframe": "month",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "tin công nghệ",
+            "topic": "news",
+            "timeframe": "month",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "tin công nghệ",
+            "topic": "news",
+            "timeframe": "month",
+            "items": [
+              {
+                "title": "Làm chủ công nghệ lõi để Việt Nam bứt phá về bán dẫn và AI",
+                "url": "https://baotintuc.vn/lam-chu-cong-nghe-loi-de-viet-nam-but-pha-ve-ban-dan-va-ai-post1394843.html",
+                "source": "baotintuc.vn",
+                "summary": "Tin mới\n Tin đọc nhiều\n\n Media\n  + Tin tức TV\n  + Ảnh\n  + Podcast\n  + MegaStory\n  + Infographics\n  + Ảnh 360\n\n Thời tiết\n Giá vàng\n Tỷ giá\n\n Thông tin tòa soạn\n Liên hệ quảng cáo\n Đặt báo\n RSS\n\n Đọc báo giấy\n  + Tuần tin tức\n  + Dn tộc và Miền núi\n\nKhoa học công nghệ\n\nSản phẩm  Chuyển đổi số  Đổi mới sáng tạo  AI\n\n# Làm chủ công nghệ lõi để Việt Nam bứt phá về bán dẫn và AI [...] ## Phú Thọ đưa khoa học công nghệ, chuyển đổi số thành động lực phát triển\n\n### Tin cùng chuyên mục\n\nTrung tm Công nghệ Laufenburg trong tương lai tại Thụy Sĩ - khu phức hợp rộng 20.000m² bao gồm trung tm dữ liệu AI, văn phòng và phòng thí nghiệm. Ảnh: TTXVN phát  \n\n## Kinh nghiệm Đan Mạch giúp giảm áp lực năng lượng từ cơn sốt AI\n\nCác nhà khoa học Israel tiết lộ cách dùng AI tìm chất thay thế đường trong tương lai [...] Để đưa nghiên cứu đến thị trường, doanh nghiệp cần tham gia xác định bài toán và cùng nhà trường phát triển giải pháp. Nguồn vốn phải theo được tiến trình hoàn thiện sản phẩm còn cơ chế pháp lý cần bảo vệ quyền lợi của các bên. Những điều kiện ấy tạo cơ sở để Việt Nam phát triển năng lực công nghệ và từng bước tham gia các công đoạn có giá trị cao hơn trong lĩnh vực bán dẫn và AI.\n\nLưu Niệm/Báo Tin tức và Dn tộc\n\n### Tin liên quan\n\n## TP Hồ Chí Minh đổi mới công tác kiểm tra Đảng từ dữ liệu số",
+                "score": 0.37731177
+              },
+              {
+                "title": "Bộ Khoa học và Công nghệ yêu cầu khẩn trương triển khai sử dụng Nền tảng AI công vụ",
+                "url": "https://tapchitoaan.vn/bo-khoa-hoc-va-cong-nghe-yeu-cau-khan-truong-trien-khai-su-dung-nen-tang-ai-cong-vu16563.html",
+                "source": "tapchitoaan.vn",
+                "summary": "Để bảo đảm hoàn thành các chỉ tiêu theo hai quyết định nêu trên, Cục Công nghiệp công nghệ thông tin đề nghị các đơn vị đầu mối khẩn trương thông báo đến từng cán bộ, công chức, viên chức và người lao động thuộc phạm vi quản lý về việc đã được cấp tài khoản, kèm theo thông tin đăng nhập, đường dẫn truy cập và tài liệu hướng dẫn sử dụng. Đồng thời, các đơn vị cần đôn đốc người dùng đăng nhập, sử dụng Nền tảng phục vụ công việc hằng ngày. [...] ###### Tin quan tm\n\n# Bộ Khoa học và Công nghệ yêu cầu khẩn trương triển khai sử dụng Nền tảng AI công vụ\n\n15/10/2026 20:45\n\nChia sẻ Zalo \n\nChia sẻ\n\n##### Cục Công nghiệp công nghệ thông tin, Bộ Khoa học và Công nghệ đề nghị các đơn vị đầu mối triển khai Nền tảng AI công vụ khẩn trương thông báo thông tin tài khoản đến từng cán bộ, công chức, viên chức và người lao động, đồng thời đôn đốc sử dụng Nền tảng, hoàn thành trước ngày 20/10/2026. [...] Đầu mối điều phối chung của Bộ Khoa học và Công nghệ là bà Nguyễn Thị Mỹ Vn, Chuyên viên Cục Công nghiệp công nghệ thông tin, điện thoại 0913.189.879, thư điện tử ntmvan.cntt@mst.gov.vn.\n\nCục Công nghiệp công nghệ thông tin yêu cầu việc thông báo thông tin tài khoản đến từng cán bộ, công chức, viên chức và người lao động, đồng thời đôn đốc sử dụng Nền tảng, phải hoàn thành trước ngày 20/10/2026.",
+                "score": 0.36581963
+              },
+              {
+                "title": "Dấu ấn doanh nghiệp công nghệ thông tin Việt Nam tại Nhật Bản",
+                "url": "https://baotayninh.vn/dau-an-doanh-nghiep-cong-nghe-thong-tin-viet-nam-tai-nhat-ban-352842.html",
+                "source": "baotayninh.vn",
+                "summary": "## Tin mới nhất\n\n### Thời tiết ngày 9/11: Bắc Bộ chuyển rét, Trung Bộ có nơi mưa rất to\n\n### Quốc hội làm việc về ngân sách nhà nước và các dự án luật\n\n### 950 năm Quốc Tử Giám: Dấu ấn thiên niên kỷ của hồn cốt di sản\n\n### Thủ tướng Đức đề cử bà Ilse Aigner làm ứng cử viên Tổng thống\n\n### Tây Ninh: Đổi mới công tác tuyên truyền, củng cố vững chắc khối đại đoàn kết toàn dân\n\n### Giá lúa tươi tăng mạnh từ 300-900 đồng/kg [...] ### Chuyên trang MTTQ: Phụ nữ tiên phong, sáng tạo trong công tác chuyển đổi số\n\nGiải mã 1.000 hệ gene lúa Việt, tìm nguồn gene quý\n\n### Giải mã 1.000 hệ gene lúa Việt, tìm nguồn gene quý\n\nĐưa phong trào Bình dân học vụ số đi vào chiều sâu\n\n### Đưa phong trào Bình dân học vụ số đi vào chiều sâu\n\nNâng cao tỷ lệ tích hợp tài khoản an sinh xã hội trên ứng dụng VNeID\n\n### Nâng cao tỷ lệ tích hợp tài khoản an sinh xã hội trên ứng dụng VNeID\n\nĐưa sản phẩm OCOP lên không gian số [...] ### Đưa sản phẩm OCOP lên không gian số\n\nQuét mã QR - Hiểu thêm một sản phẩm quê\n\n### Quét mã QR - Hiểu thêm một sản phẩm quê\n\nPhát huy hiệu quả Sổ tay đảng viên điện tử\n\n### Phát huy hiệu quả Sổ tay đảng viên điện tử\n\nNâng cao chiến lược áp dụng trí tuệ nhân tạo trong hợp tác xã\n\n### Nâng cao chiến lược áp dụng trí tuệ nhân tạo trong hợp tác xã\n\nRa mắt chip và nền tảng bán dẫn bảo mật đầu tiên tại Việt Nam\n\n### Ra mắt chip và nền tảng bán dẫn bảo mật đầu tiên tại Việt Nam",
+                "score": 0.31361994
+              },
+              {
+                "title": "TP Hồ Chí Minh thúc đẩy phát triển đô thị công nghệ cao",
+                "url": "https://www.qdnd.vn/kinh-te/tin-tuc/tp-ho-chi-minh-thuc-day-phat-trien-do-thi-cong-nghe-cao-1060852",
+                "source": "qdnd.vn",
+                "summary": "Đó là thông tin nổi bật tại Hội nghị quốc tế thường niên Khu Công nghệ cao TP Hồ Chí Minh lần thứ 8 diễn ra ngày 16-10 với chủ đề “Đô thị công nghệ cao - Động lực tăng trưởng của TP Hồ Chí Minh trong kỷ nguyên mới”, thu hút hơn 300 chuyên gia, nhà khoa học, doanh nghiệp trong và ngoài nước tham dự.\n\n|  |\n\n|  |\n| Toàn cảnh hội nghị. | [...] ### Tin thể thao (10-11): Xem trực tiếp U23 Việt Nam và U23 Thái Lan trên kênh nào?\n\nVạch trần chiêu bài lợi dụng đấu tố cực đoan để chống phá trên không gian mạng - Bài 2: Kiên quyết tẩy chay đấu tố cực đoan, thanh lọc môi trường mạng lành mạnh, văn minh (Tiếp theo và hết)\n\n### Vạch trần chiêu bài lợi dụng đấu tố cực đoan để chống phá trên không gian mạng - Bài 2: Kiên quyết tẩy chay đấu tố cực đoan, thanh lọc môi trường mạng lành mạnh, văn minh (Tiếp theo và hết) [...] Báo Quân đội nhân dân | Tin tức quân đội, quốc phòng | Bảo vệ Tổ quốc\nFollow on Facebook\nFollow on Zalo\nFollow on Youtube\nFollow on Tiktok\nFollow on Google News\n\n# TP Hồ Chí Minh thúc đẩy phát triển đô thị công nghệ cao\n\nTác giả: HỒNG GIANGHỒNG GIANG\n\nTác giả: HỒNG GIANG",
+                "score": 0.2939975
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R17_confirm_before_send_post",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "confirm_before_write",
+        "difficulty": "medium",
+        "what_it_tests": "Hành động đăng/gửi lên Telegram → phải xác nhận yes_no trước, không tự đăng."
+      },
+      "input": "Đăng bài viết này lên Telegram giúp mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "text": "Đăng bài viết này lên Telegram giúp mình"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_boundary",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call send"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "send",
+          "args": {
+            "text": "Đăng bài viết này lên Telegram giúp mình"
+          },
+          "result": {
+            "tool": "send_telegram",
+            "status": "needs_confirmation",
+            "message": "Only send after the user explicitly confirms."
+          }
+        }
+      ]
+    },
+    {
+      "id": "R18_out_of_scope_poem",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope_creative",
+        "difficulty": "easy",
+        "what_it_tests": "Yêu cầu sáng tác nội dung ngoài phạm vi research → KHÔNG gọi tool, từ chối lịch sự."
+      },
+      "input": "Viết cho tôi một bài thơ về mùa thu",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Xin lỗi, nhưng tôi không thể giúp bạn với yêu cầu này.",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "R19_missing_url",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clarify_missing_url",
+        "difficulty": "medium",
+        "what_it_tests": "Nói 'bài viết này' nhưng không có link → phải clarify xin URL, không đoán bừa."
+      },
+      "input": "Tóm tắt bài viết này giúp tôi",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com/article"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call fetch"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://example.com/article"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://example.com/article",
+            "items": [
+              {
+                "title": "Example Domain",
+                "url": "https://example.com/article",
+                "source": "example.com",
+                "summary": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.\n\nهذا النطاق مُخصص للاستخدام في أمثلة التوثيق دون الحاجة إلى إذن. هذه ليست خدمة، يُرجى تجنب الاعتماد عليها لأغراض الاختبار والمراقبة.\n\n该域名仅用于文档示例，无需获得许可。这并非一项服务，请勿将其用于测试和监控目的。\n\nL’usage de ce domaine est réservé à des exemples de documentation, sans autorisation préalable. Il ne s’agit pas d’un service ; son utilisation à des fins de test ou de surveillance est à éviter.\n\nДанный домен предназначен для использования в примерах документации без необходимости получения предварительного разрешения. Это не сервис; не рекомендуется его использование для тестирования и мониторинга.\n\nEste dominio está destinado al uso en ejemplos de documentación sin necesidad de permiso. Esto no es un servicio; evitar utilizarlo para realizar pruebas o monitoreos.\n\n [Learn more](https://iana.org/help/example-domains)"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

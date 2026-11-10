@@ -1,0 +1,3 @@
+# Only tells Vercel where the web entrypoint is; dependencies stay in requirements.txt.
+[tool.vercel]
+entrypoint = "api.chat:handler"

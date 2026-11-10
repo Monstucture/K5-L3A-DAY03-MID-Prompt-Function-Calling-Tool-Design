@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "agent-demo",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["starter_v0/api/chat.py"],
+      "port": 8000
+    }
+  ]
+}

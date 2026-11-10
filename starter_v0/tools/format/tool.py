@@ -18,9 +18,57 @@ def _bullet(item: dict[str, Any]) -> str:
     return f"- {text} - {_src(item)}"
 
 
-def render_digest(items: list[dict[str, Any]] | None = None, template: str = "sections", headline: str = "") -> dict[str, Any]:
+DIGEST_MAX_ITEMS = 10  # keeps the digest a ~5 minute read
+WORDS_PER_MINUTE = 200
+
+
+def _digest_5min(items: list[dict[str, Any]], headline: str, searched_with: list[str]) -> str:
+    """Numbered quick-read digest: one short entry per item with its link, then all sources and the searches used."""
+    items = items[:DIGEST_MAX_ITEMS]
+    entries = []
+    for index, item in enumerate(items, start=1):
+        title = (item.get("title") or "").strip() or (item.get("summary") or "").strip()[:80]
+        summary = (item.get("summary") or "").strip().replace("\n", " ")
+        if len(summary) > 300:
+            summary = summary[:297] + "..."
+        link = _src(item) or "(không có link)"
+        line = f"{index}. **{title}**" + (f" — {summary}" if summary and summary != title else "")
+        entries.append(f"{line}\n   🔗 {link}")
+
+    sources: dict[str, str] = {}
+    for item in items:
+        url = item.get("url") or ""
+        if url and url not in sources:
+            sources[url] = f"- [{item.get('source') or domain(url)}]({url}) — {(item.get('title') or '').strip()}"
+
+    body = "\n\n".join(entries)
+    minutes = max(1, round(len(body.split()) / WORDS_PER_MINUTE))
+    parts = [
+        f"# {headline or 'Bản tin 5 phút'}",
+        f"_⏱ ~{minutes} phút đọc · {len(items)} tin · {len(sources)} nguồn_",
+        "",
+        body or "_Chưa có tin nào._",
+        "",
+        "---",
+        "**📚 Nguồn & tài liệu tham khảo**",
+        *(sources.values() or ["- (không có link)"]),
+    ]
+    if searched_with:
+        parts += ["", "**🔎 Agent đã tìm bằng**", *[f"- {step}" for step in searched_with]]
+    return "\n".join(parts)
+
+
+def render_digest(
+    items: list[dict[str, Any]] | None = None,
+    template: str = "sections",
+    headline: str = "",
+    searched_with: list[str] | None = None,
+) -> dict[str, Any]:
     items = items or []
-    if template == "brief":
+    if template == "digest_5min":
+        items = items[:DIGEST_MAX_ITEMS]
+        markdown = _digest_5min(items, headline, [str(step) for step in (searched_with or [])])
+    elif template == "brief":
         markdown = (f"**{headline}**\n\n" if headline else "") + "\n".join(_bullet(item) for item in items[:5])
     elif template == "bullets":
         markdown = "\n".join(_bullet(item) for item in items)

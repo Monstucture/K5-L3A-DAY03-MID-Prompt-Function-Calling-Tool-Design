@@ -103,3 +103,10 @@ def test_agent_executes_tool_and_survives_unknown_or_bad_calls() -> None:
     assert run.tool_results[0]["result"]["awaiting_user"] is True
     assert run.tool_results[1]["error"] == "unknown_tool"
     assert run.tool_results[2]["result"]["error"] == "TypeError"
+
+
+def test_papers_query_drops_stopwords() -> None:
+    from tools.papers.tool import _arxiv_search_query
+
+    assert _arxiv_search_query("chain of thought") == "all:chain AND all:thought"
+    assert _arxiv_search_query("cat:cs.CL") == "cat:cs.CL"
