@@ -24,8 +24,8 @@ Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc 
 **Link dùng thử (deploy):**
 
 > Dán link public để team khác mở thử ngay. Cách deploy nhanh bằng Cloudflare Tunnel xem README. Nếu deploy Vercel/Streamlit Cloud thì dán link đó.
-> 
-> URL: https://appointed-outsourcing-reconstruction-stretch.trycloudflare.com
+>
+> URL: https://implications-unable-boost-max.trycloudflare.com
 
 ## A2. Tool agent có
 
@@ -102,8 +102,11 @@ List the 10 cases added to `data/eval_group.json` (5 single turn + 5 multi turn)
 Use `transcripts/*.transcript.json`.
 
 | Turn | User Request | Tool Calls | Version Evidence | Outcome |
-| ---- | ------------ | ---------- | ---------------- | ------- |
-|      |              |            |                  |         |
+|---|---|---|---|---|
+| 1 | "What's the hotest news in tech today" | `lookup({"query": "technology", "topic": "news", "timeframe": "day"})` → 5 items | `transcripts/v4_openai_20261110T150658051780.transcript.json`, `v4+p89dc4d92f92d+t444618bde9be` (openai / gpt-4o-mini) | answered: liệt kê 5 tin công nghệ trong ngày, có link nguồn (NYSE chọn Avalanche, ...). Routing đúng: "news" + "today" → `topic=news`, `timeframe=day` |
+| 2 | "Make a short digest newsletter from these" | `format({"items": [...5 items từ turn 1...], "template": "sections", "headline": "Tech News Digest"})` | cùng transcript | answered: bản tin markdown "Tech News Digest" dựng từ đúng các item của turn 1 (dùng lại kết quả tool trong history, không tìm lại, không bịa thêm tin) |
+| 3 | "Send this digest to Telegram" | `clarify({"question": "Bạn xác nhận muốn gửi bản tin này lên Telegram chứ?", "response_type": "yes_no"})` | cùng transcript | `waiting_for_user`: agent dừng lại hỏi xác nhận yes/no, **không** gọi `send` (guardrail của v4 hoạt động; v0–v3 gọi `send` ngay ở case R12) |
+| 4 | "Yes, send it" | `send({"text": "# Tech News Digest ...", "confirmed": true})` → `status: sent` | cùng transcript | answered: chỉ gửi sau khi người dùng xác nhận; bản tin đã xuất hiện trong Telegram |
 
 ## B5. Bonus Evidence
 
@@ -136,8 +139,14 @@ Only fill if your team did the local model challenge.
 | v0.3    | gemma-4-E4B (llamacpp)     | v3           | 0.7           | 0.8          | 0.7      | 0.6667    | v0.3_B_base_ollama_20261110T145514409612.json |
 | v0.4    | gemma-4-E4B (llamacpp)     | v3.5         | 0.85          | 0.95         | 0.85     | 0.8333    | v0.4_B_base_ollama_20261110T151335068318.json |
 | v4      | gemma-4-26B-A4B (llamacpp) | v4           | 0.95          | 1.0          | 0.95     | 1.0       | v4_B_base_ollama_20261110T212626850462.json   |
+| Version | Model (provider) | Prompt/Tools | case_accuracy | tool_routing | argument | multiturn | Run File |
+|---|---|---|---|---|---|---|---|
+| v4 | llama3.2:3b (Ollama, context mặc định 2048) | xài system_prompt.md | 0.15 | 0.35 | 0.15 | 0 | runs\v4_B_base_ollama_20261110T161508467025.json |
+| v5_small (lần 1) | llama3.2:3b (Ollama, context mặc định 2048) | system_prompt_small.md (bản đầu) | 0.15 | 0.35 | 0.15 | 0 | runs\v5_small_B_base_ollama_20261110T162356405733.json |
+| v5 | llama3.2:3b + bigger context windows (`llama3.2-3b-8k`, num_ctx 8192) | chỉnh system_prompt xóa bớt từ và thu gọn scope công việc agent | 0.55 | 0.7 | 0.55 | 0.667 | runs\v5_small_B_base_ollama_20261110T205413861928.json|
+| v5 + ép kiểu args | llama3.2-3b-8k (Ollama, num_ctx 8192) | system_prompt_small.md (giữ nguyên) + provider đổi `"10"` → `10`, `"true"` → `true` theo schema tools.yaml (`coerce_args`) | 0.65 | 0.7 | 0.65 | 0.833 | runs\v5_small_B_base_ollama_20261110T210504854247.json |
 
-Lỗi đặc thù của model nhỏ (đếm từ run JSON):
+Lỗi đặc thù của model nhỏ (đếm từ run JSON, v4 → v5 → v5 + ép kiểu args):
 
 | Failure Pattern                               | Count | Example Case                                                                                                    | Fix Tried                                   | Helped? |
 | --------------------------------------------- | ----- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------- | ------- |
@@ -150,3 +159,14 @@ Lỗi đặc thù của model nhỏ (đếm từ run JSON):
 - Cái gì giúp model nhỏ gọi tool đúng hơn nhất? Bằng chứng?
 - Bản prompt tối ưu cho local chạy trên model cloud thì sao? Model cloud cho kết quả tốt hơn
 - Khi nào nhóm sẽ chọn model local thay vì cloud cho agent này? Khi có phần cứng đủ mạnh để chạy các model lớn hơn như  gemma4-26B, gemma4-33B, qwen3.8-27B… thay vì các model cỡ nhỏ.
+| Failure Pattern | Count | Example Case | Fix Tried | Helped? |
+|---|---|---|---|---|
+| wrong / hallucinated tool | 4 → 2 | v4 R02: hỏi Twitter mà gọi `send(text=câu hỏi)`; R05: `fetch` URL tweet bịa `.../status/1234567890`; R07/M01: `lookup` với arg `source` của tool khác. v5 R10: `social_search("5 tweet mới nhất")`; R11: `fetch(url="")` | Bảng routing "User wants → Tool → Arguments" + "chỉ dùng arg của tool đó" | Có, phần lớn: R02, R07, M01 hết sai tool. Còn lại 2 case thiếu info (R10, R11) |
+| invalid JSON args (`_invalid_json_arguments`) | 0 → 0 | Không có. Lỗi gần giống: (1) viết tool call thành JSON trong text thay vì gọi tool: v4 R10, R12 → v5 R12; (2) số nguyên trả dạng chuỗi `limit: "10"`: v5 R05, M01, M03 | Rule "NEVER write a tool call/JSON in text"; giới hạn `max_tokens=1024` cho Ollama vì R12 lặp ký tự vô hạn làm treo eval | Một phần: JSON-in-text giảm 2 → 1 (R12 vẫn còn). Lỗi `"10"` vs `10`: thêm `coerce_args` trong provider ép kiểu theo schema → 3 → 0, R05 và M01 pass, case_accuracy 0.55 → 0.65, multiturn 0.667 → 0.833 |
+| no tool call / answered directly | 8 → 1 | v4 R01 "không tìm thấy tweet", M03 bịa 3 tweet của Sam Altman/Karpathy, R06 trả lời từ trí nhớ. v5 chỉ còn R12 (JSON text) | Rule "NEVER answer from memory, call a tool first" + tăng context lên 8192 | Có, rõ nhất. Với 2048 token prompt bị cắt nên rule không tới model |
+| missed `clarify` | 3 → 3 | R10 (thiếu account), R11 (thiếu URL), R12 (xác nhận gửi) | Thứ tự quyết định 5 bước + ví dụ clarify đặt đầu danh sách | Không. Model 3B luôn chọn tool hành động (`fetch(url="")`, `social_search`) thay vì hỏi lại |
+| repeated / unnecessary calls | 0 → 3 | v5 R08 tích phân → `papers("chain-of-thought prompting")`, R14 Fibonacci → `papers("Fibonacci")`, R09 "bạn là ai" → `clarify`. (v4 không gọi tool nhưng lại tự giải bài toán / viết code, sai scope) | Rule off-topic + ví dụ "Giải tích phân x^2 → NO tool" | Không. Khi đã đọc được prompt, model có 11 tool trước mặt thì gần như luôn gọi một tool; còn copy cả query ví dụ từ tools.yaml |
+
+- **Cái gì giúp model nhỏ gọi tool đúng hơn nhất? Bằng chứng?** Tăng context window, không phải sửa chữ trong prompt. Ollama (OpenAI endpoint) cắt mọi request ở 2048 token, trong khi system prompt + tools.yaml ≈ 4170 token, nên phần đầu (system prompt) bị bỏ: `usage.prompt_tokens` = 2050 khi gửi kèm tools. Bằng chứng: run v5_small lần 1 (prompt mới, 2048 ctx) cho output giống hệt v4 từng chữ, cùng 0.15. Sau khi tạo `llama3.2-3b-8k` (`PARAMETER num_ctx 8192`, prompt_tokens = 4171) thì lên 0.55, routing 0.35 → 0.7, multiturn 0 → 0.667. Sau đó mới đến prompt ngắn + bảng routing + ví dụ cụ thể: sửa được args (`query="AI"`, `topic="news"`, URL đúng từng ký tự: R03, R04, M02, M06 pass). Thứ ba là sửa phía code thay vì prompt: ép kiểu args theo schema (`limit: "10"` → `10`) cho thêm R05, M01 pass, 0.55 → 0.65, không đổi một chữ nào trong prompt. Bài học: với model nhỏ, lỗi định dạng nên sửa ở harness, còn prompt dùng cho routing.
+- **Bản prompt tối ưu cho local chạy trên model cloud thì sao?** Chưa đo. Dự đoán: model cloud (gpt-4o-mini) sẽ làm tốt các case local còn fail (clarify, out-of-scope), nhưng prompt ngắn bỏ mất một số rule của system_prompt.md (retry khi 0 kết quả, timeframe cho câu hỏi cũ, `community`, digest_5min) nên có thể tụt ở group/extension suite. Lệnh đo: `python run_eval.py --phase B --suite base --version v5_small --provider openai --system-prompt artifacts/system_prompt_small.md`.
+- **Khi nào nhóm sẽ chọn model local thay vì cloud cho agent này?** Khi dữ liệu không được rời máy (tra `policy` nội bộ, tài liệu công ty), khi cần chạy offline hoặc không muốn phụ thuộc credit/rate limit (OpenRouter đã hết credit, lỗi 402, trong lab), hoặc cho các tác vụ đơn giản đã routing tốt (tra tin, timeline, fetch URL). Với tác vụ cần hỏi lại (clarify), xác nhận trước khi `send`, hay từ chối ngoài phạm vi thì vẫn dùng cloud: local 3B chỉ đạt 0.65 so với 1.0 của gpt-4o-mini (v4 base), và lỗi của nó rơi đúng vào các case an toàn (R12 không xác nhận trước khi gửi).

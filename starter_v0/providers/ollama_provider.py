@@ -18,4 +18,6 @@ class OllamaProvider(OpenAIProvider):
             api_key_default="ollama",  # local server ignores the key, but the SDK requires one
             base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1"),
             default_model=os.getenv("OLLAMA_MODEL", "qwen2.5:7b"),
+            # Ollama has no output cap by default; a small model stuck repeating text would never return.
+            max_tokens=int(os.getenv("OLLAMA_MAX_TOKENS", "1024")),
         )
