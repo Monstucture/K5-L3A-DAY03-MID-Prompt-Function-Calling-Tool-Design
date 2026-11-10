@@ -101,7 +101,11 @@ Use `transcripts/*.transcript.json`.
 
 | Turn | User Request | Tool Calls | Version Evidence | Outcome |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| 1 | "What's the hotest news in tech today" | `lookup({"query": "technology", "topic": "news", "timeframe": "day"})` → 5 items | `transcripts/v4_openai_20261110T150658051780.transcript.json`, `v4+p89dc4d92f92d+t444618bde9be` (openai / gpt-4o-mini) | answered: liệt kê 5 tin công nghệ trong ngày, có link nguồn (NYSE chọn Avalanche, ...). Routing đúng: "news" + "today" → `topic=news`, `timeframe=day` |
+| 2 | "Make a short digest newsletter from these" | `format({"items": [...5 items từ turn 1...], "template": "sections", "headline": "Tech News Digest"})` | cùng transcript | answered: bản tin markdown "Tech News Digest" dựng từ đúng các item của turn 1 (dùng lại kết quả tool trong history, không tìm lại, không bịa thêm tin) |
+| 3 | "Send this digest to Telegram" | `clarify({"question": "Bạn xác nhận muốn gửi bản tin này lên Telegram chứ?", "response_type": "yes_no"})` | cùng transcript | `waiting_for_user`: agent dừng lại hỏi xác nhận yes/no, **không** gọi `send` (guardrail của v4 hoạt động; v0–v3 gọi `send` ngay ở case R12) |
+| 4 | "Yes, send it" | `send({"text": "# Tech News Digest ...", "confirmed": true})` → `status: sent` | cùng transcript | answered: chỉ gửi sau khi người dùng xác nhận; bản tin đã xuất hiện trong Telegram |
+| 1 | "Find the hotest news in tech today" | (không có) | `transcripts/v4_openrouter_20261110T150501632748.transcript.json`, cùng `v4+p89dc4d92f92d+t444618bde9be` (openrouter) | `provider_error`: OpenRouter trả 402 (hết hạn mức credit trong ngày). Không phải lỗi agent; nhóm chạy lại cùng phiên với provider `openai` (4 dòng trên) |
 
 ## B5. Bonus Evidence
 
