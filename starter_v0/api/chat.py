@@ -7,13 +7,16 @@ from __future__ import annotations
 import json
 import os
 import sys
+import threading
+import time
+from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from chat import ARTIFACTS_DIR, run_model_tool_loop, trim_history  # noqa: E402  (chat.py also loads .env)
+from chat import ARTIFACTS_DIR, json_text, run_model_tool_loop, trim_history  # noqa: E402  (chat.py also loads .env)
 from providers import make_provider  # noqa: E402
 from tools import load_tool_declarations, to_openai_tools  # noqa: E402
 
@@ -21,6 +24,21 @@ PROVIDER = os.getenv("DEMO_PROVIDER", "openrouter")
 SYSTEM_PROMPT = (ARTIFACTS_DIR / "system_prompt.md").read_text(encoding="utf-8")
 TOOLS = to_openai_tools(load_tool_declarations(ARTIFACTS_DIR / "tools.yaml"))
 MAX_MESSAGE_CHARS = 2000
+LOG_FILE = Path(os.getenv("DEMO_LOG_FILE", ROOT / "logs" / "demo_chat.jsonl"))
+_log_lock = threading.Lock()
+
+
+def log_turn(entry: dict) -> None:
+    """Print a short summary and append the full turn as one JSON line to LOG_FILE."""
+    tools = ", ".join(f"{t['name']}{'' if t['ok'] else '(ERR)'}" for t in entry["tools"]) or "-"
+    print(f"[{entry['time']}] Q: {entry['question'][:120]!r} | tools: {tools} | {entry['status']} | {entry['duration_s']}s")
+    try:
+        with _log_lock:
+            LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+            with LOG_FILE.open("a", encoding="utf-8") as file:
+                file.write(json.dumps(entry, ensure_ascii=False, default=str) + "\n")
+    except OSError as exc:  # e.g. read-only filesystem on Vercel: keep serving, just skip the file
+        print(f"log write failed: {exc}")
 
 
 class handler(BaseHTTPRequestHandler):
@@ -53,14 +71,59 @@ class handler(BaseHTTPRequestHandler):
             *trim_history(history, 5),
             {"role": "user", "content": message},
         ]
+        started = time.monotonic()
+        entry = {
+            "time": datetime.now().isoformat(timespec="seconds"),
+            "provider": PROVIDER,
+            "question": message,
+            "history_messages": len(history),
+            "status": "provider_error",
+            "tools": [],
+            "reply": None,
+        }
         try:
             result = run_model_tool_loop(
                 provider=make_provider(PROVIDER), messages=messages, tools=TOOLS, model=None, max_tool_rounds=4
             )
         except Exception as exc:
-            return self._json(502, {"error": f"{type(exc).__name__}: {exc}"})
-        tool_calls = [c for r in result["rounds"] for c in r["tool_calls"]]
-        self._json(200, {"status": result["status"], "reply": result["assistant_text"], "tool_calls": tool_calls})
+            entry.update(error=f"{type(exc).__name__}: {exc}", duration_s=round(time.monotonic() - started, 1))
+            log_turn(entry)
+            return self._json(502, {"error": entry["error"]})
+        # One entry per model round: what it said, which tools it called, and a trimmed view of each result.
+        steps = [
+            {
+                "round": r["round"],
+                "assistant_text": r["assistant_text"],
+                "tools": [
+                    {
+                        "name": e["tool"],
+                        "args": e["args"],
+                        "ok": not (isinstance(e["result"], dict) and "error" in e["result"]),
+                        "result": json_text(e["result"], max_chars=800),
+                    }
+                    for e in r["tool_results"]
+                ],
+            }
+            for r in result["rounds"]
+        ]
+        entry.update(
+            status=result["status"],
+            reply=result["assistant_text"],
+            duration_s=round(time.monotonic() - started, 1),
+            tools=[
+                {
+                    "round": s["round"],
+                    "name": t["name"],
+                    "args": t["args"],
+                    "ok": t["ok"],
+                    "error": None if t["ok"] else t["result"][:300],
+                }
+                for s in steps
+                for t in s["tools"]
+            ],
+        )
+        log_turn(entry)
+        self._json(200, {"status": result["status"], "reply": result["assistant_text"], "steps": steps})
 
     # Local dev only: Vercel serves public/ itself.
     def do_GET(self) -> None:

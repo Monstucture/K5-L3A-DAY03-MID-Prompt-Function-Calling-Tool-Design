@@ -11,8 +11,15 @@
   .msg { padding: 10px 12px; border-radius: 10px; white-space: pre-wrap; line-height: 1.45; }
   .user { align-self: flex-end; background: #2457d6; color: #fff; max-width: 80%; }
   .agent { align-self: flex-start; background: #fff; border: 1px solid #dde1e7; max-width: 90%; }
-  .tools { font: 12px ui-monospace, monospace; color: #555; margin-top: 6px; }
   .error { border-color: #d33; color: #a00; }
+  .process { align-self: flex-start; max-width: 90%; font-size: .85rem; background: #eef1f6; border: 1px solid #dde1e7; border-radius: 10px; padding: 8px 12px; }
+  .process summary { cursor: pointer; font-weight: 600; }
+  .step { margin-top: 8px; padding-left: 10px; border-left: 3px solid #b8c4dc; }
+  .note { color: #555; font-style: italic; white-space: pre-wrap; }
+  .call { font: 12px ui-monospace, monospace; margin-top: 4px; }
+  .call.fail { color: #a00; }
+  .call pre { white-space: pre-wrap; background: #fff; border: 1px solid #dde1e7; border-radius: 6px; padding: 6px; margin: 4px 0 0; max-height: 200px; overflow: auto; }
+  .pending { color: #555; font-style: italic; }
   form { display: flex; gap: 8px; position: sticky; bottom: 0; background: #f6f7f9; padding: 12px 0; }
   input { flex: 1; padding: 10px; font-size: 1rem; border: 1px solid #c4c9d2; border-radius: 8px; }
   button { padding: 10px 16px; font-size: 1rem; border: 0; border-radius: 8px; background: #2457d6; color: #fff; cursor: pointer; }
@@ -32,18 +39,44 @@ const log = document.getElementById("log"), form = document.getElementById("form
       input = document.getElementById("input"), send = document.getElementById("send");
 const history = [];
 
-function add(cls, text, tools) {
-  const div = document.createElement("div");
-  div.className = "msg " + cls;
-  div.textContent = text;
-  if (tools && tools.length) {
-    const t = document.createElement("div");
-    t.className = "tools";
-    t.textContent = tools.map(c => "🔧 " + c.name + "(" + JSON.stringify(c.args) + ")").join("\n");
-    div.appendChild(t);
-  }
+const STATUS = { answered: "đã trả lời", waiting_for_user: "đang chờ bạn bổ sung", max_tool_rounds: "dừng: quá số vòng tool" };
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+function add(cls, text) {
+  const div = el("div", "msg " + cls, text);
   log.appendChild(div);
   div.scrollIntoView({ block: "end" });
+  return div;
+}
+
+// Shows each model round: its note, the tools it called with args, and each tool's (trimmed) result.
+function addProcess(steps, status) {
+  const toolCount = steps.reduce((n, s) => n + s.tools.length, 0);
+  const box = el("details", "process");
+  box.open = true;
+  box.appendChild(el("summary", null,
+    `Quá trình: ${steps.length} vòng, ${toolCount} tool — ${STATUS[status] || status}`));
+  steps.forEach(s => {
+    const step = el("div", "step");
+    step.appendChild(el("div", null, `Vòng ${s.round}: ` + (s.tools.length ? "gọi tool" : "trả lời trực tiếp")));
+    if (s.tools.length && s.assistant_text) step.appendChild(el("div", "note", s.assistant_text));
+    s.tools.forEach(t => {
+      const call = el("details", "call" + (t.ok ? "" : " fail"));
+      const args = JSON.stringify(t.args);
+      const short = args.length > 120 ? args.slice(0, 120) + "…" : args;
+      call.appendChild(el("summary", null, `${t.ok ? "✅" : "❌"} ${t.name}(${short})`));
+      call.appendChild(el("pre", null, "args: " + JSON.stringify(t.args, null, 2) + "\n\nresult: " + t.result));
+      step.appendChild(call);
+    });
+    box.appendChild(step);
+  });
+  log.appendChild(box);
 }
 
 form.addEventListener("submit", async (e) => {
@@ -53,6 +86,7 @@ form.addEventListener("submit", async (e) => {
   add("user", message);
   input.value = "";
   send.disabled = true;
+  const pending = add("pending", "Agent đang suy nghĩ và gọi tool…");
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
@@ -61,9 +95,12 @@ form.addEventListener("submit", async (e) => {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || res.statusText);
-    add("agent", data.reply || "(no reply)", data.tool_calls);
+    pending.remove();
+    addProcess(data.steps || [], data.status);
+    add("agent", data.reply || "(no reply)");
     history.push({ role: "user", content: message }, { role: "assistant", content: data.reply || "" });
   } catch (err) {
+    pending.remove();
     add("agent error", "Lỗi: " + err.message);
   } finally {
     send.disabled = false;

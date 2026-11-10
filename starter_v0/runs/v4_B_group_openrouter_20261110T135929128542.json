@@ -1,0 +1,375 @@
+{
+  "run_id": "v4_B_group_openrouter_20261110T135929128542",
+  "version": "v4",
+  "artifact_version": "v4+p2bf66d2ce43a+t5b22a2476d41",
+  "prompt_hash": "2bf66d2ce43abb926839efcfbe054b08c079b67074e2723f0d1d7a29cfb53565",
+  "tools_hash": "5b22a2476d41b989d5dc1e54f24ce7890e781909deb2f7afafb856ab53a6d7c0",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\monst\\OneDrive\\Desktop\\Git Repo\\K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\monst\\OneDrive\\Desktop\\Git Repo\\K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
+  "generated_at": "2026-11-10T13:59:29",
+  "summary": {
+    "total_cases": 5,
+    "measured_cases": 5,
+    "provider_error_cases": 0,
+    "passed_cases": 5,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": null,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "R15_routing_web_not_twitter",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_web_news",
+        "difficulty": "medium",
+        "what_it_tests": "Cụm 'tìm trên web tin tức' → lookup/web_search."
+      },
+      "input": "Tìm trên web tin tức gần đây về OpenAI",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI",
+              "topic": "news"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI",
+              "topic": "news",
+              "timeframe": "week",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "OpenAI",
+            "topic": "news",
+            "timeframe": "week",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "OpenAI",
+            "topic": "news",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "OpenAI",
+                "url": "https://tavily.com/knowledge/company/p4PyTakV77G9",
+                "source": "tavily.com",
+                "summary": "# OpenAI\nID: p4PyTakV77G9\nWebsite: www.openai.com\nHeadquarters: San Francisco, CA, United States\nLinkedIn: www.linkedin.com/company/openai · 11,529,792 followers\nIndustry: Research Services\nIndustry codes: SIC 87, 873, NAICS 54, 541\nCompany type: Partnership\nSocial profiles: www.facebook.com/openai, www.twitter.com/openai, www.crunchbase.com/organization/openai, www.instagram.com/openai.gpt, www.instagram.com/openai, www.youtube.com/@openai, www.youtube.com/openai, github.com/openai [...] Description: OpenAI is a company that believes in research and development to lead to artificial general intelligence, a system that can solve human-level problems. [...] ## Products and services\nKeywords: research & development, emerging ai software, openai, artificial intelligence machine learning, artificial general intelligence, development, research, human-level problems, technology, application-software, artificial-intelligence, platform",
+                "score": 0.90593183
+              },
+              {
+                "title": "Setting a new standard for responsible AI infrastructure | OpenAI",
+                "url": "https://openai.com/index/setting-new-standard-responsible-ai-infrastructure",
+                "source": "openai.com",
+                "summary": "The promise of AI is that it gives people more power to shape their own futures. It can help someone learn a new skill, build a business, or solve a problem that was previously out of reach. Building more computing infrastructure capacity in the United States can help lower the cost of delivering AI, put these tools in more people’s hands, and ensure America stays at the forefront of the technology. [...] protect residents, and ensure that the benefits of AI infrastructure are broadly shared. [...] Create opportunities for local workers and businesses.We’ll publish the jobs we expect to create, work with unions and training providers to help residents prepare for them, and report annually on hiring and apprenticeships. We’ll also make sustained investments in priorities residents help select.",
+                "score": 0.72231215
+              },
+              {
+                "title": "OpenAI gets $11 billion funding at $1.25 trillion valuation, source says | Reuters",
+                "url": "https://www.reuters.com/business/openai-secures-11-billion-funding-125-trillion-valuation-bloomberg-news-reports-2026-11-06",
+                "source": "reuters.com",
+                "summary": "Nov 6 (Reuters) - OpenAI has closed ‌on new funding of $11 billion, the initial part of a round ​that values the company ​at $1.25 trillion, a source familiar with ⁠the matter said on Friday.\n\nThe $11 ​billion raised so far represents ​only a portion of OpenAI's original target of up to $30 billion, while ​the company's valuation has ​come down from the $1.5 trillion level it ‌had ⁠initially sought, two investors said. [...] The Reuters Daily Briefing newsletter provides all the news you need to start your day. Sign up here.\n\nAdvertisement · Scroll to continue\n\nSoftBank and MGX participated in the funding, the investors said.\n\nBloomberg News reported ​on the ​funding ⁠earlier on Friday.\n\nSentiment toward AI companies has ​cooled in the last ​month, ⁠with some investors valuing rival Anthropic's planned IPO at about $1.5 ⁠trillion, ​below earlier expectations ​of roughly $2 trillion.",
+                "score": 0.7147281
+              },
+              {
+                "title": "OpenAI will keep investing in AI data centers despite election results, CFO tells CNBC",
+                "url": "https://www.cnbc.com/2026/11/06/open-ai-data-centers-election.html",
+                "source": "cnbc.com",
+                "summary": "OpenAI CFO Sarah Friar on Friday said the company will continue to invest in artificial intelligence infrastructure, even after voters strongly rebuked data centers during Tuesday's midterm elections.",
+                "score": 0.65914243
+              },
+              {
+                "title": "OpenAI employees warned about operational security lapses for years, sources say | Reuters",
+                "url": "https://www.reuters.com/business/openai-employees-warned-about-operational-security-lapses-years-sources-say-2026-11-03",
+                "source": "reuters.com",
+                "summary": "OpenAI and Anthropic have tried to ​maintain a more open research culture to both ⁠attract employees and foster creativity that can lead to breakthroughs. The AI field is rooted in academia, where machine-learning scientists have openly discussed their research.\n\nSome OpenAI employees are increasingly worried about this approach as AI grows more capable, according to the five people. [...] When asked about employees' concerns and their view that management did not act on these issues, OpenAI spokesperson Elana Widmann ​said that OpenAI is one of the most targeted organizations in the world. As a result, the company invests heavily in its security program to protect against attacks from insiders, cybercriminals and nation-states, she said. [...] The Reuters Daily Briefing newsletter provides all the news you need to start your day. Sign up here.\n\nThese workers argued that OpenAI's controls were so lax ‌that outsiders, including foreign governments, could obtain sensitive information about the AI lab's technology with relative ease, the people said. For example, anybody at OpenAI who could access its code could see the technical details underlying many company projects.",
+                "score": 0.6213807
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R16_arg_timeframe_month",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_timeframe",
+        "difficulty": "medium",
+        "what_it_tests": "'trong tháng này' → timeframe=month."
+      },
+      "input": "Tin công nghệ trong tháng này",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "công nghệ",
+              "topic": "news",
+              "timeframe": "month",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "công nghệ",
+            "topic": "news",
+            "timeframe": "month",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "công nghệ",
+            "topic": "news",
+            "timeframe": "month",
+            "items": [
+              {
+                "title": "Mỹ đưa 'báu vật công nghệ mạnh nhất thế giới' sang Việt Nam phục vụ dự án 5.200 tỷ đồng - Đến Tesla, Meta, Microsoft cũng phải săn đón",
+                "url": "https://cafef.vn/my-dua-bau-vat-cong-nghe-manh-nhat-the-gioi-sang-viet-nam-phuc-vu-du-an-5200-ty-dong-den-tesla-meta-microsoft-cung-phai-san-don-18826102211052326.chn",
+                "source": "cafef.vn",
+                "summary": "Việc đầu tư hạ tầng tính toán AI diễn ra trong bối cảnh nhu cầu xử lý dữ liệu, phát triển mô hình AI tạo sinh và tự động hóa ngày càng tăng. Với các doanh nghiệp công nghệ, năng lực tiếp cận GPU hiệu năng cao là một trong những yếu tố quan trọng để rút ngắn thời gian nghiên cứu, thử nghiệm và triển khai sản phẩm. [...] DGX H100 là hệ thống máy chủ chuyên dụng cho các tác vụ tính toán AI hiệu năng cao. Mỗi hệ thống được trang bị 8 bộ xử lý đồ họa NVIDIA H100 Tensor Core, kết nối với nhau thông qua công nghệ NVLink nhằm tăng tốc độ trao đổi dữ liệu giữa các GPU.",
+                "score": 0.29294962
+              },
+              {
+                "title": "Khoa học công nghệ phải tạo ra sản phẩm, giá trị cụ thể",
+                "url": "https://laodong.vn/thoi-su/khoa-hoc-cong-nghe-phai-tao-ra-san-pham-gia-tri-cu-the-1784557.ldo",
+                "source": "laodong.vn",
+                "summary": "Hôn nhn gia đình\n\nChuyện nhà mình Yêu 360 Nuôi con\n\nCông nghệ\n\nThế giới số Vũ khí - Qun sự\n\nXe\n\nThị trường xe Lái xe an toàn\n\nTin tức việc làm\n\nTư vấn lao động Xuất khẩu lao động\n\nĐính chính\n\nBÁO LAO ĐỘNG\n\nĐăng nhập bằng tài khoản Lao Động\n\nEmail đăng nhập:\n\nMật khẩu:\n\nBạn quên mật khẩu?  Lấy lại mật khẩu\n\nBạn chưa có tài khoản?  Đăng ký ngay.\n\n|  |  |\n --- |\n|  |  |\n\n|  |  |\n --- |\n|  |  | [...] Thời sự\n\nSự kiện bình luận\n\nPháp luật\n\nTư vấn pháp luật An ninh hình sự\n\nCông đoàn\n\nCách làm hay từ cơ sở Vì lợi ích đoàn viên\n\nThể thao\n\nBóng chuyền Bóng đá Việt Nam Bóng đá quốc tế Lịch thi đấu Golf Tennis\n\nThế giới\n\nTư liệu\n\nSức khỏe\n\nY tế Dinh dưỡng - Ẩm thực Làm đẹp Các loại bệnh\n\nVăn hóa - Giải trí\n\nVăn hóa Giải trí Thời trang Sách hay\n\nBạn đọc\n\nĐiều tra theo đơn thư Chính sách Ý kiến - Hồi m\n\nBất động sản\n\nNhà đẹp Quy hoạch\n\nGiáo dục\n\nChính sách giáo dục Tuyển sinh\n\nHôn nhn gia đình [...] Đăng nhập\n\n### Thời sự\n\n### Sự kiện Bình luận\n\n# Khoa học công nghệ phải tạo ra sản phẩm, giá trị cụ thể\n\nHạo Thiên   -    Thứ bảy, 17/10/2026 10:23 (GMT+7)\n\n, tại thủ đô Tokyo, Tổng Bí thư, Chủ tịch nước Tô Lm đã có cuộc hội đàm với Thủ tướng Nhật Bản Takaichi...\n\nQuốc hội thảo luận về chủ trương đầu tư 3 dự án đường bộ cao tốc\n\n## Quốc hội thảo luận về chủ trương đầu tư 3 dự án đường bộ cao tốc",
+                "score": 0.2850937
+              },
+              {
+                "title": "Apple, Intel và Meta muốn mở rộng sản xuất công nghệ cao, phát triển công nghiệp bán dẫn - Tuổi Trẻ Online",
+                "url": "https://tuoitre.vn/apple-intel-va-meta-muon-mo-rong-san-xuat-cong-nghe-cao-phat-trien-cong-nghiep-ban-dan-100261014161411471.htm",
+                "source": "tuoitre.vn",
+                "summary": "Tại hội nghị có chủ đề \"Kỷ nguyên tăng trưởng mới: Đưa quan hệ đối tác kinh tế Việt Nam -Hoa Kỳ đi vào chiều su\", Phó thủ tướng thường trực nêu 5 lĩnh vực hợp tác ưu tiên giữa hai nước.\n\nBao gồm: công nghệ cao, đặc biệt là bán dẫn, trí tuệ nhn tạo và dữ liệu; năng lượng sạch và chuyển đổi xanh, ưu tiên đầu tư vào năng lượng tái tạo; phát triển chuỗi cung ứng bền vững; hợp tác tài chính, đổi mới sáng tạo và khởi nghiệp; giáo dục, đào tạo và phát triển nguồn nhn lực chất lượng cao. [...] + Mua sắm\n  + Chứng khoán\n  + Xem thêm...\n  + Giá vàng hôm nay\n Công nghệ\n  + Thiết bị\n  + Chuyển đổi số\n  + Cầu nối\n  + Nhịp sống số\n  + Xem thêm...\n  + Trải nghiệm\n  + Thị trường\n  + Thủ thuật\n  + Gia đình số\n  + Nhịp cầu\n Xe\n  + Tin tức\n  + Tư vấn mua xe\n  + Đánh giá xe\n  + Thị trường xe\n  + Xem thêm...\n  + Hỏi đáp\n  + Kỹ thuật\n  + An toàn giao thông\n Du lịch\n  + Cơ hội du lịch\n  + Đi chơi\n  + Mách bạn\n  + Quê hương\n Nhịp sống trẻ\n  + Xu hướng\n  + Theo gương Bác\n  + Khám phá\n  + Yêu [...] Những kiến nghị khác tập trung vào đào tạo nhn lực công nghệ cao, hỗ trợ doanh nghiệp Việt Nam tham gia chuỗi cung ứng toàn cầu và ứng dụng trí tuệ nhn tạo (AI) trong hoạt động sản xuất, kinh doanh.\n\nTập đoàn AES và GE Vernova mong muốn tiếp tục hợp tác phát triển nguồn điện, hệ thống truyền tải và chuỗi cung ứng thiết bị năng lượng, đáp ứng nhu cầu điện cho sản xuất và phát triển kinh tế.",
+                "score": 0.27269635
+              },
+              {
+                "title": "Dùng công nghệ ngoại xịn nhưng hỏng toàn bộ chỉ sau 3 tháng, Việt Nam vào cuộc rồi thành công lớn, khẳng định đẳng cấp công nghệ nội địa",
+                "url": "https://cafef.vn/dung-cong-nghe-ngoai-xin-nhung-hong-toan-bo-chi-sau-3-thang-viet-nam-vao-cuoc-roi-thanh-cong-lon-khang-dinh-dang-cap-cong-nghe-noi-dia-188261028104936586.chn",
+                "source": "cafef.vn",
+                "summary": "Bên cạnh ý nghĩa công nghệ, sản phẩm còn đem lại lợi ích kinh tế. Theo EEMC đưa tin ngày 23/11/2011, việc sử dụng máy biến áp 500 kV sản xuất trong nước giúp tiết giảm gần 30% chi phí mua sắm so với thiết bị nhập khẩu cùng loại. Năng lực sản xuất nội địa cũng giúp ngành điện chủ động hơn trong cung ứng, bảo dưỡng và xử lý sự cố, đồng thời giảm phụ thuộc vào nguồn thiết bị từ nước ngoài. [...] TIN MỚI\n\nMua công nghệ ngoại xịn nhưng hỏng toàn bộ chỉ sau 3 tháng, Việt Nam tự sản xuất rồi thành công lớn, nay làm chủ công nghệ phức tạp  - Ảnh 1.\n\nẢnh minh họa\n\nNgày 22/11/2011, đóng điện thành công máy biến áp 500 kV đầu tiên do Việt Nam tự nghiên cứu, thiết kế và chế tạo tại Trạm biến áp 500 kV Nho Quan, Ninh Bình. [...] Công trình có nhiệm vụ giải tỏa công suất của tổ máy số 4 Nhà máy Thủy điện Sơn La, đồng thời giảm tình trạng quá tải tại trạm và tăng cường khả năng cung cấp điện cho Hà Nội cùng các tỉnh khu vực phía Bắc.",
+                "score": 0.2695312
+              },
+              {
+                "title": "Ra mắt nền tảng kết nối công nghệ Việt Nam - Australia - Báo VnExpress",
+                "url": "https://vnexpress.net/ra-mat-nen-tang-ket-noi-cong-nghe-viet-nam-australia-5131338.html",
+                "source": "vnexpress.net",
+                "summary": "Điều này thực hiện qua việc giúp doanh nghiệp và các cơ sở nghiên cứu, đào tạo trong nước tiếp cận tri thức, phát triển nhn lực và nng cao năng lực công nghệ. Các dự án vì thế cần gắn hoạt động nghiên cứu với khả năng tạo ra sản phẩm đáp ứng nhu cầu thị trường và tham gia su hơn vào chuỗi giá trị. [...] Thứ trưởng Khoa học và Công nghệ Lê Xun Định. Ảnh: Mai Hà\n\n \n\nThứ trưởng đề nghị thúc đẩy hợp tác khoa học công nghệ Việt Nam - Australia theo hướng thiết thực, có kết quả và duy trì lu dài. Trong đó, tập trung vào bốn nhiệm vụ: lựa chọn dự án từ nhu cầu thực tế và xác định rõ kết quả; gắn nghiên cứu, phát triển sản phẩm với đào tạo nhn lực; vận hành hiệu quả nền tảng V-bridge; đồng thời xác định dự án ưu tiên, đối tác, trách nhiệm từng bên, nguồn lực dự kiến, sản phẩm và mốc đánh giá. [...] Cục trưởng Công nghệ số và Trí tuệ nhn tạo Nguyễn Khắc Lịch cho biết, V-bridge hướng tới duy trì kết nối trực tuyến giữa các doanh nghiệp và tổ chức trong hệ sinh thái công nghệ Việt Nam - Australia. Qua đó, các đối tác có thể tiếp tục tìm hiểu, làm việc và phát triển những cơ hội hợp tác sau các cuộc gặp trực tiếp.",
+                "score": 0.2612277
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R17_confirm_before_send_post",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "confirm_before_write",
+        "difficulty": "medium",
+        "what_it_tests": "Hành động đăng/gửi lên Telegram → phải xác nhận yes_no trước, không tự đăng."
+      },
+      "input": "Đăng bài viết này lên Telegram giúp mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn xác nhận muốn đăng bài viết này lên Telegram chứ?",
+              "response_type": "yes_no"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn xác nhận muốn đăng bài viết này lên Telegram chứ?",
+            "response_type": "yes_no"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn xác nhận muốn đăng bài viết này lên Telegram chứ?",
+            "response_type": "yes_no",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "R18_out_of_scope_poem",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope_creative",
+        "difficulty": "easy",
+        "what_it_tests": "Yêu cầu sáng tác nội dung ngoài phạm vi research → KHÔNG gọi tool, từ chối lịch sự."
+      },
+      "input": "Viết cho tôi một bài thơ về mùa thu",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Xin lỗi, nhưng tôi không thể viết thơ. Tuy nhiên, tôi có thể giúp bạn tìm kiếm thông tin hoặc nội dung liên quan đến mùa thu nếu bạn cần. Bạn muốn tìm hiểu điều gì về mùa thu?",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "R19_missing_url",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clarify_missing_url",
+        "difficulty": "medium",
+        "what_it_tests": "Nói 'bài viết này' nhưng không có link → phải clarify xin URL, không đoán bừa."
+      },
+      "input": "Tóm tắt bài viết này giúp tôi",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn gửi giúp mình link bài viết nhé?",
+              "response_type": "text"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn gửi giúp mình link bài viết nhé?",
+            "response_type": "text"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn gửi giúp mình link bài viết nhé?",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    }
+  ]
+}
