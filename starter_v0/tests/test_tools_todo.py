@@ -21,6 +21,13 @@ social_search_tool = TOOL_FUNCTIONS["social_search"]
 timeline_tool = TOOL_FUNCTIONS["timeline"]
 fetch_tool = TOOL_FUNCTIONS["fetch"]
 
+
+def _tweet(tweet_id: str | None, text: str = "hello", handle: str = "sama") -> dict:
+    raw = {"screen_name": handle, "text": text}
+    if tweet_id:
+        raw["tweet_id"] = tweet_id
+    return raw
+
 TODO = "TODO(student): implement this test"
 
 
