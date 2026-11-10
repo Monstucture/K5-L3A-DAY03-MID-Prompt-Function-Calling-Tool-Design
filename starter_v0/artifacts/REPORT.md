@@ -24,7 +24,7 @@ Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc 
 
 > Dán link public để team khác mở thử ngay. Cách deploy nhanh bằng Cloudflare Tunnel xem README. Nếu deploy Vercel/Streamlit Cloud thì dán link đó.
 >
-> URL: 
+> URL: https://appointed-outsourcing-reconstruction-stretch.trycloudflare.com
 
 ## A2. Tool agent có
 
@@ -33,8 +33,14 @@ Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc 
 | Tên tool | Làm được gì | Tool mới nhóm thêm? |
 |---|---|---|
 | clarify | hỏi lại người dùng khi thiếu thông tin | không |
-|  |  |  |
-|  |  |  |
+| timeline | Lấy các bài đăng gần đây | không |
+| social_search | Tìm trên mạng xã hội | không |
+| lookup | Tra cứu thông tin trên internet | không |
+| fetch | Lấy nội dung từ một địa chỉ | không |
+| send | Gửi một đoạn văn bản đi | không |
+| policy | Tìm trong tài liệu nội bộ | không |
+| papers | Tìm bài báo khoa học| không |
+| paper_text | Lấy nội dung text của một bài báo | không |
 
 ## A3. Câu hỏi mẫu để thử
 
