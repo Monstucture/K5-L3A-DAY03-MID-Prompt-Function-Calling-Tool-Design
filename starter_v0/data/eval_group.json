@@ -1,7 +1,267 @@
+
+
 {
-  "dataset_id": "day04_v2_research_group",
+  "dataset_id": "hoquoctoan_research_eval",
   "dataset_role": "group",
-  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "description": "10 tình huống: 5 một lượt và 5 nhiều lượt.",
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
+  "cases": [
+    {
+      "id": "G01_web_news",
+      "phase": "B",
+      "query": "Tìm 3 tin tức AI hôm nay trên web.",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 3
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Chọn công cụ tìm web và truyền đúng loại tin, thời gian, số lượng."
+      }
+    },
+    {
+      "id": "G02_missing_url",
+      "phase": "B",
+      "query": "Tóm tắt một bài viết mới giúp tôi. Tôi chưa gửi đường dẫn của bài đó.",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Thiếu đường dẫn thì hỏi lại, không tự đoán."
+      }
+    },
+    {
+      "id": "G03_read_url",
+      "phase": "B",
+      "query": "Đọc và tóm tắt nội dung tại https://example.com.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Đã có đường dẫn cụ thể thì dùng fetch, không tìm kiếm thay thế."
+      }
+    },
+    {
+      "id": "G04_capabilities",
+      "phase": "B",
+      "query": "Bạn có những chức năng gì? Chỉ giới thiệu, chưa cần thực hiện công việc nào.",
+      "failure_type": "unnecessary_tool",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "what_it_tests": "Giới thiệu chức năng trực tiếp, không gọi công cụ thừa."
+      }
+    },
+    {
+      "id": "G05_format_existing_items",
+      "phase": "B",
+      "query": "Chuyển dữ liệu đã có sau đây thành bản tin gạch đầu dòng: [{\"title\":\"Tin A\",\"summary\":\"Nội dung A\"},{\"title\":\"Tin B\",\"summary\":\"Nội dung B\"}]. Không tìm thêm thông tin.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "template": "bullets"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Dùng công cụ trình bày dữ liệu đã có, không tìm kiếm thêm."
+      }
+    },
+    {
+      "id": "G06_change_topic",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm 3 tin AI hôm nay trên web."
+        },
+        {
+          "role": "user",
+          "content": "Đổi chủ đề sang robotics. Vẫn lấy 3 tin hôm nay trên web."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 3
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Cập nhật chủ đề mới và giữ đúng thời gian, số lượng."
+      }
+    },
+    {
+      "id": "G07_provide_missing_url",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tôi muốn tóm tắt một bài viết nhưng chưa gửi đường dẫn."
+        },
+        {
+          "role": "user",
+          "content": "Đây là đường dẫn: https://example.com. Hãy đọc và tóm tắt."
+        }
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Sau khi có đường dẫn thì đọc bài, không tiếp tục hỏi thông tin đã được cung cấp."
+      }
+    },
+    {
+      "id": "G08_correct_time_and_count",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm 5 tin robotics trong tuần này trên web."
+        },
+        {
+          "role": "user",
+          "content": "Sửa lại: lấy 2 tin robotics trong tháng này."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "month",
+              "max_results": 2
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Thay cả thời gian và số lượng theo yêu cầu mới nhất."
+      }
+    },
+    {
+      "id": "G09_confirm_before_send",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Nội dung bản tin là: Hôm nay tôi học cách xây dựng trợ lý nghiên cứu."
+        },
+        {
+          "role": "user",
+          "content": "Đăng bản tin vừa rồi lên Telegram giúp tôi."
+        }
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Đã có nội dung nhưng chưa có xác nhận thì phải hỏi trước khi gửi."
+      }
+    },
+    {
+      "id": "G10_cancel_request",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm tin AI hôm nay trên web."
+        },
+        {
+          "role": "user",
+          "content": "Hủy yêu cầu vừa rồi. Không tìm kiếm nữa, chỉ xác nhận đã hủy."
+        }
+      ],
+      "failure_type": "unnecessary_tool",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "what_it_tests": "Tôn trọng yêu cầu hủy, không thực hiện công việc ở lượt trước."
+      }
+    },
+    {
+  "id": "G11_filter_keyword",
+  "phase": "B",
+  "query": "Chỉ giữ các tin chứa từ khóa robotics trong danh sách sau, không tìm thêm dữ liệu: [{\"title\":\"Robotics hôm nay\",\"summary\":\"Tin mới\"},{\"title\":\"Y tế\",\"summary\":\"Thông tin sức khỏe\"}].",
+  "failure_type": "wrong_tool",
+  "expect": {
+    "tool_calls": [
+      {
+        "name": "filter_by_keyword",
+        "args": {
+          "keyword": "robotics"
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "what_it_tests": "AI chọn công cụ lọc dữ liệu đã có và truyền đúng từ khóa."
+  }
+}
+    
+  ]
 }

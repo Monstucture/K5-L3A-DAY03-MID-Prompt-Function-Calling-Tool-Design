@@ -120,3 +120,35 @@ def test_my_new_tool_bad_input_from_model() -> None:
 
 def test_my_new_tool_failure_returns_error_dict() -> None:
     pytest.skip(TODO)
+def test_filter_by_keyword_normal_input():
+    items = [
+        {"title": "Robotics hôm nay", "summary": "Tin mới"},
+        {"title": "Y tế", "summary": "Thông tin sức khỏe"}
+    ]
+
+    result = TOOL_FUNCTIONS["filter_by_keyword"](
+        items=items,
+        keyword="ROBOTICS"
+    )
+
+    assert result["count"] == 1
+    assert result["items"][0]["title"] == "Robotics hôm nay"
+
+
+def test_filter_by_keyword_rejects_empty_keyword():
+    result = TOOL_FUNCTIONS["filter_by_keyword"](
+        items=[],
+        keyword=""
+    )
+
+    assert result["error"] == "ValueError"
+
+
+def test_filter_by_keyword_returns_error_for_broken_item():
+    result = TOOL_FUNCTIONS["filter_by_keyword"](
+        items=[{"title": None}],
+        keyword="robotics"
+    )
+
+    assert result["error"] == "TypeError"
+    assert "message" in result

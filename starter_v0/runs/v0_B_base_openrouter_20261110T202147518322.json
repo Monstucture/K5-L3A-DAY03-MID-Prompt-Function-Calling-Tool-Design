@@ -1,0 +1,1474 @@
+{
+  "run_id": "v0_B_base_openrouter_20261110T202147518322",
+  "version": "v0",
+  "artifact_version": "v0+peb1c8179815b+t5b22a2476d41",
+  "prompt_hash": "eb1c8179815bd79d34de7d326420bb99b3072e6e8ae96464c02d4411f905fc68",
+  "tools_hash": "5b22a2476d41b989d5dc1e54f24ce7890e781909deb2f7afafb856ab53a6d7c0",
+  "phase": "B",
+  "suite": "base",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\Admin\\P-139\\K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\Admin\\P-139\\K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_base.json",
+  "dataset_id": "day04_v2_research_base",
+  "dataset_role": "base",
+  "description": "Core eval cho research agent: routing đúng tool + đúng args, hỏi lại khi thiếu (ask_user), xác nhận trước khi gửi, và xử lý câu ngoài phạm vi / không cần tool. Chấm trên tool_calls + args (subset). KHÔNG sửa file này — chỉ thêm case vào eval_group.json.",
+  "generated_at": "2026-11-10T20:21:47",
+  "summary": {
+    "total_cases": 20,
+    "measured_cases": 20,
+    "provider_error_cases": 0,
+    "passed_cases": 13,
+    "case_accuracy": 0.65,
+    "tool_routing_accuracy": 0.75,
+    "argument_accuracy": 0.65,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {
+      "wrong_tool": 2,
+      "out_of_scope": 2,
+      "missing_info": 2,
+      "wrong_boundary": 1
+    },
+    "observed_mismatch_counts": {
+      "wrong_arg_value": 2,
+      "unexpected_tool_call": 2,
+      "missing_tool_call": 3
+    }
+  },
+  "results": [
+    {
+      "id": "R01_user_tweets_routing",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_user_tweets_name_to_handle",
+        "difficulty": "medium",
+        "what_it_tests": "Tin CỦA một người nổi tiếng → map tên Sam Altman thành handle sama rồi gọi get_user_tweets."
+      },
+      "input": "Tweet mới nhất của Sam Altman là gì?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "sama"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "sama",
+              "limit": 1
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "sama",
+            "limit": 1
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "error": "HTTPError",
+            "message": "403 Client Error: Forbidden for url: https://twitter-api45.p.rapidapi.com/timeline.php?screenname=sama"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R02_search_tweets_routing",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_search_tweets",
+        "difficulty": "easy",
+        "what_it_tests": "Tweet theo CHỦ ĐỀ → search_tweets, không phải get_user_tweets."
+      },
+      "input": "Mọi người đang bàn gì về GPT-5 trên Twitter?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "GPT-5",
+              "search_type": "Latest",
+              "limit": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "GPT-5",
+            "search_type": "Latest",
+            "limit": 5
+          },
+          "result": {
+            "tool": "search_tweets",
+            "error": "HTTPError",
+            "message": "429 Client Error: Too Many Requests for url: https://twitter-api45.p.rapidapi.com/search.php?query=GPT-5&search_type=Latest"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R03_web_news_routing",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_web_news",
+        "difficulty": "medium",
+        "what_it_tests": "Tin thời sự trên web → web_search topic=news, timeframe=day (hôm nay)."
+      },
+      "input": "Tin tức AI hôm nay có gì nổi bật?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI news",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "query: expected 'AI', got 'AI news'"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "AI news",
+            "topic": "news",
+            "timeframe": "day",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "AI news",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "SoftBank Group sinks into losses as its AI hopes falter | AP News",
+                "url": "https://apnews.com/article/earnings-japan-softbank-ai-investments-son-nvidia-b2cfbb190e27c0202d533799b6ec3e8b",
+                "source": "apnews.com",
+                "summary": "Tech\n\nSECTIONS Artificial IntelligenceSocial Media  \n\nTOP STORIES \n       Staff at the US center for AI safety are reporting to the White House, raising independence concerns\n       Anthropic is rapidly accelerating AI development amid slowdown calls, outside research group says\n       Milei pitches Patagonia for AI data centers as resistance grows in the US and Europe\n\n   \nLifestyle\n\nSECTIONS Food & RecipesGardeningFashionHomesTravelPets [...] — SoftBank Group sank into losses for the latest quarter, the Japanese technology company reported Tuesday, as worries about investments in artificial intelligence hurt its bottom line.\n\nTokyo-based SoftBank Group Corp. racked up a 1.1 trillion yen ($7 billion) loss for the three months through September, a reversal from the 2.5 trillion yen in profit the same period a year earlier. Quarterly sales rose 16% to 2.2 trillion yen from 1.9 trillion yen. [...] Analysts say the financial results for a company like SoftBank Group are difficult to predict as it invests in a variety of other companies, including OpenAI and Arm Holdings, whose fortunes tend to be volatile.",
+                "score": 0.6750153
+              },
+              {
+                "title": "Anthropic enters student AI privacy agreement with teachers unions | K-12 Dive",
+                "url": "https://www.k12dive.com/news/anthropic-enters-student-ai-privacy-agreement-with-teachers-unions/874193",
+                "source": "k12dive.com",
+                "summary": "### Dive Insight:\n\nIn September, AFT and UFT announced Microsoft had signed onto the AI safety and privacy agreement. \n\nThe AI Safety and Privacy Standard for Schools bars tech companies from using student and educator data to train AI models and from selling or using that data for advertising purposes. It also requires those companies to implement strong security protections and to design their tools to avoid harmful or manipulative experiences for students. [...] The ban did not apply to teachers’ use of AI.\n\nThat same month, Los Angeles Unified School District also announced it would restrict all students from using AI tools for the 2026-27 school year.\n\n### Recommended Reading\n\n Teachers unions announce AI safety agreement with Microsoft\n\n  By\n  Anna Merod\n  •\n  Sept. 9, 2026\n\n \n  Add us on Google\n \n  Share)\n\n  + \n    Copy link)\n  + \n    Email\n  + \n    LinkedIn\n  + \n    X/Twitter\n  + \n    Facebook\n  + \n    Print)\n  + \n    License [...] AI can only “protect and enhance” teachers’ work “if teachers, students and school systems trust us,” Elizabeth Kelly, head of beneficial deployments at Anthropic, said in a Nov. 10 statement. “These agreements provide a foundation for that trust.”\n\nRandi Weingarten, president of AFT, said in a statement that the agreement is “one step closer to an industry standard” now that Anthropic, a major player in the AI space, has joined.",
+                "score": 0.624637
+              },
+              {
+                "title": "Accurate medical advice from AI can still be dangerous | STAT",
+                "url": "https://www.statnews.com/2026/11/10/ai-health-advice-accuracy-messaging-risk-behavioral-benchmarking",
+                "source": "statnews.com",
+                "summary": "Artificial intelligence is delivering health guidance at an unprecedented scale. Every week, more than 300 million people ask ChatGPT health questions. Now, the federal government is moving AI deeper into medical care to communicate directly and autonomously with patients. Chris Klomp, the nominee for deputy secretary of Health and Human Services, has called AI in patient care the agency’s “holy grail” for improving the nation’s health. [...] In October, several states sued OpenAI, alleging that ChatGPT gives dangerous medical advice and misleads consumers about safety. OpenAI says it will continue to improve the model. [...] But both the lawsuits and the company’s response focus on blatantly harmful content, not accurate health advice that can still be unsafe. A draft federal bill that Anthropic, the maker of Claude, has circulated to lawmakers would let the government block an AI model if it could imminently kill or seriously injure more than 50 people.",
+                "score": 0.5998368
+              },
+              {
+                "title": "Social media posts twisted in AI phishing scams | Fox News",
+                "url": "https://www.foxnews.com/tech/ai-phishing-scams-turn-your-social-posts-against-you",
+                "source": "foxnews.com",
+                "summary": "Kurt Knutsson, the 'CyberGuy', weighs in on warnings of rising AI cyber threats after Bill Gates sounds the alarm. Gates warns of negative surprises within a year and cautions that the world is not prepared for AI upheavals.\n\nNEWYou can now listen to Fox News articles! [...] #### Greg Gutfeld: The government needs Elon Musk more than he needs the government\n China is trying to ‘steal’ AI chips, Rep Brian Mast warns\n\n  #### China is trying to ‘steal’ AI chips, Rep Brian Mast warns\n Nvidia CEO Jensen Huang probed on affair with alleged Chinese spy\n\n  #### Nvidia CEO Jensen Huang probed on affair with alleged Chinese spy\n NVIDIA faces questions over CEO's affair with alleged Chinese spy [...] #### This is exactly what a ‘honey trap’ is: Former NSA analyst\n AI safety group warns Republicans are losing voters over data center projects\n\n  #### AI safety group warns Republicans are losing voters over data center projects\n Gutfeld: Would you read a book by a guy who does this?\n\n  #### Gutfeld: Would you read a book by a guy who does this?\n Martha MacCallum warns against using ChatGPT for parenting advice",
+                "score": 0.5911333
+              },
+              {
+                "title": "State of Practice: Attorneys Rely on AI but Fear Losing Jobs",
+                "url": "https://news.bloomberglaw.com/business-and-practice/state-of-practice-attorneys-rely-on-ai-but-fear-losing-jobs",
+                "source": "news.bloomberglaw.com",
+                "summary": "A quarter of attorneys now fear losing their jobs to artificial intelligence, according to Bloomberg Law’s new State of Practice survey. For early-career lawyers, the concern is far more pronounced, with more than 1 in 3 associates worried that AI will replace their job. That compares to 16% of partners.\n\nJob security isn’t the only gap between associates and partners regarding their AI concerns. More than one-third of ...\n\n## Learn more about Bloomberg Law or Log In to keep reading: [...] Bloomberg Law\n\nBusiness & Practice\n\nEmail\n\nShare To:Facebook\n\nLinkedIn\n\n[](\n\nSpecial Report\n\n# State of Practice: Attorneys Rely on AI but Fear Losing Jobs\n\nNov. 10, 2026, 10:02 AM UTC\n\nRiya Sharma\n\nRiya Sharma\n\nReporter\n\nThe rapid growth of AI in legal practice is reshaping how work gets done by attorneys, but fears of being replaced by the tech persist and the return on investment remains mixed.",
+                "score": 0.5392865
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R04_read_url_routing",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_read_url",
+        "difficulty": "easy",
+        "what_it_tests": "Đã có link cụ thể → read_url, không phải web_search."
+      },
+      "input": "Tóm tắt bài này giúp mình: https://openai.com/blog/gpt-5",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://openai.com/blog/gpt-5"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://openai.com/blog/gpt-5"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://openai.com/blog/gpt-5"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://openai.com/blog/gpt-5",
+            "items": [
+              {
+                "title": "OpenAI",
+                "url": "https://openai.com/blog/gpt-5",
+                "source": "openai.com",
+                "summary": "OpenAI\n\n# 404\n\nSearch finds no result\n\nThe question still earns its keep\n\nAsk it a new way\n\nby [gpt-6-astra(opens in a new window)](https://chatgpt.com/?surface=work&model=gpt-6-astra-wm&openaicom-did=52cdc990-ae75-4748-bf07-215286d35858&openaicom_referred=true)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R05_limit_arg",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_limit",
+        "difficulty": "easy",
+        "what_it_tests": "Trích đúng limit=10 từ '10 tweet'."
+      },
+      "input": "Lấy 10 tweet mới nhất của Elon Musk",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 10
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 10
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "elonmusk",
+            "limit": 10
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "error": "HTTPError",
+            "message": "403 Client Error: Forbidden for url: https://twitter-api45.p.rapidapi.com/timeline.php?screenname=elonmusk"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R06_timeframe_arg",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_timeframe",
+        "difficulty": "medium",
+        "what_it_tests": "'tuần này' → timeframe=week."
+      },
+      "input": "Tin công nghệ trong tuần này",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "tin công nghệ",
+              "topic": "news",
+              "timeframe": "week",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "tin công nghệ",
+            "topic": "news",
+            "timeframe": "week",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "tin công nghệ",
+            "topic": "news",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "Siri AI sắp hỗ trợ tiếng Việt, Galaxy Z Fold8 bán chạy sau khi iPhone gập ra mắt",
+                "url": "https://viettimes.vn/tin-nong-cong-nghe-411-siri-ai-sap-ho-tro-tieng-viet-z-fold8-ban-chay-sau-khi-iphone-gap-ra-mat-post207917.html",
+                "source": "viettimes.vn",
+                "summary": "Tin nóng công nghệ 3/11: Kính thiên văn NASA nặng 1,5 tấn sắp rơi xuống Trái Đất  \n\n## Tin nóng công nghệ 3/11: Kính thiên văn NASA nặng 1,5 tấn sắp rơi xuống Trái Đất\n\niPhone gập tiếp tục khan hàng khiến Apple chưa thể đáp ứng nhu cầu, ba mẫu iPhone 8 năm tuổi vẫn được cập nhật bảo mật và người đàn ông điều khiển xe lăn bằng suy nghĩ là những tin công nghệ đáng chú ý ngày 3/11.\n\nPhương tiện bay không người lái (UAV) của Viettel xuất hiện tại lễ diễu binh, diễu hành A80. Ảnh: Viettel. [...] Tin nóng công nghệ 8/11: OPPO sẽ khai tử flagship Find X10 Ultra vì giá RAM tăng?  \n\n## Tin nóng công nghệ 8/11: OPPO sẽ khai tử flagship Find X10 Ultra vì giá RAM tăng?\n\nOPPO được đồn đoán điều chỉnh chiến lược smartphone cao cấp, còn NASA chuẩn bị bước tiến mới trong thám hiểm Mặt Trăng... là những tin công nghệ đáng chú ý ngày 8/11.\n\nDoanh nghiệp tham gia một nửa số nhiệm vụ KHCN, góp 40% vốn  \n\n## Doanh nghiệp tham gia một nửa số nhiệm vụ KHCN, góp 40% vốn [...] Trong một thí nghiệm tại Mỹ, 24 trong số 30 tình nguyện viên cảm nhận được sự hiện diện của người khác khi ngồi trước gương trong phòng tối.\n\nTin nóng công nghệ 7/11: Điện thoại Android nhắc người dùng bỏ quên đồ đạc  \n\n## Tin nóng công nghệ 7/11: Điện thoại Android nhắc người dùng bỏ quên đồ đạc\n\nAndroid bổ sung cảnh báo khi người dùng bỏ quên đồ, Apple có thể thay đổi thiết kế nút bấm trên iPhone đời sau... là những tin công nghệ đáng chú ý ngày 7/11.",
+                "score": 0.67321366
+              },
+              {
+                "title": "Tin nóng công nghệ 9/11: iPhone Air 2 có thể được bổ sung camera thứ 2",
+                "url": "https://vietbao.vn/tin-nong-cong-nghe-911-iphone-air-2-co-the-duoc-bo-sung-camera-thu-2-615163.html",
+                "source": "vietbao.vn",
+                "summary": "Video\n Ảnh\n Infographic\n Emagazine\n\n1. Trang chủ\n2. Khoa học\n3. Tin tức\n\n# Tin nóng công nghệ 9/11: iPhone Air 2 có thể được bổ sung camera thứ 2\n\n13:36 09/11/2026\n\niPhone Air 2 có thể có camera thứ 2, Samsung hé lộ smartphone màn hình trượt, trong khi chuyên gia Tencent cảnh báo nguy cơ AI bị lợi dụng để phát triển vũ khí sinh học là những tin công nghệ đáng chú ý ngày 9/11.\n\nMục lục\n\nMinh Qun\n\n1. iPhone Air 2 có thể được bổ sung camera thứ 2 [...] Vivo đang phát triển mẫu điện thoại gập mới có màn hình nhỏ hơn 6,5 inch nhằm cạnh tranh với iPhone Duo và Samsung Galaxy Z Fold 8. Theo PhoneArena, thông tin bắt nguồn từ tài khoản Digital Chat Station trên mạng xã hội Weibo.\n\nVivo có thể ra mắt điện thoại gập nhỏ gọn để cạnh tranh với iPhone Duo. Ảnh: PhoneArena. [...] Theo Bloomberg, Apple đang thử nghiệm iPhone Air 2 với camera góc siêu rộng bên cạnh camera chính 48 MP. Camera mới có thể giúp người dùng chụp phong cảnh và nhóm đông người linh hoạt hơn. Hãng cũng đang tìm cách cải thiện thời lượng pin nhưng chưa rõ phương án cụ thể.\n\niPhone Air hiện còn một số hạn chế như chỉ có một loa, cổng USB 2 và tốc độ sạc thấp hơn dòng Pro. Theo 9to5Mac, những điểm yếu này có thể khiến người dùng cn nhắc khi giá bán gần bằng iPhone Pro.",
+                "score": 0.5559422
+              },
+              {
+                "title": "Nghệ An khai giảng 2 lớp đào tạo đại học Công nghệ thông tin cho 76 cán bộ, công chức cấp xã",
+                "url": "https://baonghean.vn/nghe-an-khai-giang-2-lop-dao-tao-dai-hoc-cong-nghe-thong-tin-cho-76-can-bo-cong-chuc-cap-xa-10355469.html",
+                "source": "baonghean.vn",
+                "summary": "Điểm đáng chú ý của khóa học là sự gắn kết giữa yêu cầu đào tạo chuyên môn với nhu cầu sử dụng cán bộ của địa phương. Việc cử cán bộ đi học không chỉ nhằm bổ sung văn bằng mà hướng đến trang bị kiến thức, kỹ năng để trực tiếp tham mưu, triển khai và giải quyết những vấn đề thực tiễn về công nghệ thông tin, chuyển đổi số tại cơ sở. [...] Việc khai giảng 2 lớp đào tạo đại học Công nghệ thông tin cho cán bộ, công chức cấp xã là bước triển khai cụ thể trong đổi mới công tác đào tạo, bồi dưỡng cán bộ của tỉnh Nghệ An theo hướng xuất phát từ yêu cầu thực tiễn, gắn đào tạo với vị trí việc làm và nhu cầu sử dụng cán bộ. [...] Đối với các học viên, đồng chí đề nghị xác định rõ trách nhiệm học tập, phát huy tinh thần chủ động, cầu thị; gắn kiến thức được đào tạo với những vấn đề thực tiễn đang đặt ra tại cơ quan, đơn vị. Mỗi học viên cần phấn đấu không chỉ sử dụng thành thạo công nghệ mà còn có khả năng tham mưu, đề xuất giải pháp, hướng dẫn đồng nghiệp, trở thành lực lượng nòng cốt thúc đẩy chuyển đổi số tại địa phương.",
+                "score": 0.380138
+              },
+              {
+                "title": "Nhân viên công nghệ thông tin tại trạm y tế thuộc nhóm hợp đồng nào?",
+                "url": "https://doisongphapluat.com.vn/nhan-vien-cong-nghe-thong-tin-tai-tram-y-te-thuoc-nhom-hop-dong-nao-a737579.html",
+                "source": "doisongphapluat.com.vn",
+                "summary": "Theo đó, việc xác định công việc Công nghệ thông tin tại Trạm Y tế phường thuộc nhóm hợp đồng thực hiện công việc chuyên môn, nghiệp vụ hay nhóm công việc hỗ trợ, phục vụ phải căn cứ vào danh mục vị trí việc làm được cấp có thẩm quyền phê duyệt, bản mô tả công việc, khung năng lực của vị trí việc làm và nhiệm vụ thực tế được giao.\n\nĐề nghị bà Huỳnh Thị Thiên Trang nghiên cứu quy định nêu trên và liên hệ với cơ quan quản lý viên chức nơi công tác để được hướng dẫn, giải quyết. [...] Tag:\n công nghệ /\n công nghệ thông tin /\n bộ nội vụ /\n nhn viên công nghệ /\n nhn viên công nghệ thông tin /\n\nZalo\n\nCảm ơn bạn đã quan tm đến nội dung trên.\n\nHãy tặng sao để tiếp thêm động lực cho tác giả có những bài viết hay hơn nữa.\n\nĐã tặng:\n\nTặng quà tác giả\n\nBÌNH LUẬN\n\n Bình luận sẽ được xét duyệt trước khi đăng. Xin vui lòng gõ tiếng Việt có dấu.\n\nTin liên quan\n\nBộ Khoa học và Công nghệ lý giải việc cấm nhập khẩu smartphone, máy tính, thiết bị công nghệ cũ",
+                "score": 0.35716435
+              },
+              {
+                "title": "Dấu ấn doanh nghiệp công nghệ thông tin Việt Nam tại Nhật Bản",
+                "url": "https://baotayninh.vn/dau-an-doanh-nghiep-cong-nghe-thong-tin-viet-nam-tai-nhat-ban-352842.html",
+                "source": "baotayninh.vn",
+                "summary": "## Tin mới nhất\n\n### Thời tiết ngày 9/11: Bắc Bộ chuyển rét, Trung Bộ có nơi mưa rất to\n\n### Quốc hội làm việc về ngân sách nhà nước và các dự án luật\n\n### 950 năm Quốc Tử Giám: Dấu ấn thiên niên kỷ của hồn cốt di sản\n\n### Thủ tướng Đức đề cử bà Ilse Aigner làm ứng cử viên Tổng thống\n\n### Tây Ninh: Đổi mới công tác tuyên truyền, củng cố vững chắc khối đại đoàn kết toàn dân\n\n### Giá lúa tươi tăng mạnh từ 300-900 đồng/kg [...] ### Chuyên trang MTTQ: Phụ nữ tiên phong, sáng tạo trong công tác chuyển đổi số\n\nGiải mã 1.000 hệ gene lúa Việt, tìm nguồn gene quý\n\n### Giải mã 1.000 hệ gene lúa Việt, tìm nguồn gene quý\n\nĐưa phong trào Bình dân học vụ số đi vào chiều sâu\n\n### Đưa phong trào Bình dân học vụ số đi vào chiều sâu\n\nNâng cao tỷ lệ tích hợp tài khoản an sinh xã hội trên ứng dụng VNeID\n\n### Nâng cao tỷ lệ tích hợp tài khoản an sinh xã hội trên ứng dụng VNeID\n\nĐưa sản phẩm OCOP lên không gian số [...] ### Đưa sản phẩm OCOP lên không gian số\n\nQuét mã QR - Hiểu thêm một sản phẩm quê\n\n### Quét mã QR - Hiểu thêm một sản phẩm quê\n\nPhát huy hiệu quả Sổ tay đảng viên điện tử\n\n### Phát huy hiệu quả Sổ tay đảng viên điện tử\n\nNâng cao chiến lược áp dụng trí tuệ nhân tạo trong hợp tác xã\n\n### Nâng cao chiến lược áp dụng trí tuệ nhân tạo trong hợp tác xã\n\nRa mắt chip và nền tảng bán dẫn bảo mật đầu tiên tại Việt Nam\n\n### Ra mắt chip và nền tảng bán dẫn bảo mật đầu tiên tại Việt Nam",
+                "score": 0.31361994
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R07_search_type_arg",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_search_type",
+        "difficulty": "medium",
+        "what_it_tests": "'phổ biến/top' → search_type=Top (không phải Latest)."
+      },
+      "input": "Cho mình các tweet phổ biến (top) nhất về OpenAI",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "search_type": "Top"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "OpenAI",
+              "search_type": "Top",
+              "limit": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "OpenAI",
+            "search_type": "Top",
+            "limit": 5
+          },
+          "result": {
+            "tool": "search_tweets",
+            "error": "HTTPError",
+            "message": "403 Client Error: Forbidden for url: https://twitter-api45.p.rapidapi.com/search.php?query=OpenAI&search_type=Top"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R08_out_of_scope",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope",
+        "difficulty": "easy",
+        "what_it_tests": "Câu ngoài phạm vi research → KHÔNG gọi tool, từ chối/định hướng."
+      },
+      "input": "Giải giúp mình bài toán tích phân: nguyên hàm của x^2 là gì?",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "text": "Nguyên hàm của x^2 là \\( \\frac{x^3}{3} + C \\), trong đó \\( C \\) là hằng số tích phân."
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": "unexpected_tool_call",
+        "failure_type": "out_of_scope",
+        "failures": [
+          "expected no tool call"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "send",
+          "args": {
+            "text": "Nguyên hàm của x^2 là \\( \\frac{x^3}{3} + C \\), trong đó \\( C \\) là hằng số tích phân."
+          },
+          "result": {
+            "tool": "send_telegram",
+            "status": "needs_confirmation",
+            "message": "Only send after the user explicitly confirms."
+          }
+        }
+      ]
+    },
+    {
+      "id": "R09_no_tool_capability",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "no_tool_meta",
+        "difficulty": "easy",
+        "what_it_tests": "Câu hỏi meta → trả lời thẳng, KHÔNG gọi tool."
+      },
+      "input": "Bạn là gì và làm được những gì?",
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Tôi là một trợ lý nghiên cứu nhanh chóng và chủ động, có khả năng tìm kiếm thông tin, lấy nội dung từ internet, theo dõi mạng xã hội, và gửi thông điệp. Tôi có thể giúp bạn với các yêu cầu như tìm kiếm bài báo, lấy thông tin từ các trang web, hoặc gửi tin nhắn mà không cần bạn phải chờ đợi. Nếu bạn cần gì, chỉ cần cho tôi biết!",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "R10_missing_handle",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clarify_missing_handle",
+        "difficulty": "medium",
+        "what_it_tests": "Thiếu handle → ask_user, KHÔNG đoán bừa người nào."
+      },
+      "input": "Tóm tắt 5 tweet mới nhất giúp mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "sama"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call timeline"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "sama"
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "error": "HTTPError",
+            "message": "403 Client Error: Forbidden for url: https://twitter-api45.p.rapidapi.com/timeline.php?screenname=sama"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R11_missing_url",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clarify_missing_url",
+        "difficulty": "medium",
+        "what_it_tests": "Nói 'bài này' nhưng không có link → ask_user xin URL."
+      },
+      "input": "Tóm tắt bài viết này hộ mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com/article"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call fetch"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://example.com/article"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://example.com/article",
+            "items": [
+              {
+                "title": "Example Domain",
+                "url": "https://example.com/article",
+                "source": "example.com",
+                "summary": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.\n\nهذا النطاق مُخصص للاستخدام في أمثلة التوثيق دون الحاجة إلى إذن. هذه ليست خدمة، يُرجى تجنب الاعتماد عليها لأغراض الاختبار والمراقبة.\n\n该域名仅用于文档示例，无需获得许可。这并非一项服务，请勿将其用于测试和监控目的。\n\nL’usage de ce domaine est réservé à des exemples de documentation, sans autorisation préalable. Il ne s’agit pas d’un service ; son utilisation à des fins de test ou de surveillance est à éviter.\n\nДанный домен предназначен для использования в примерах документации без необходимости получения предварительного разрешения. Это не сервис; не рекомендуется его использование для тестирования и мониторинга.\n\nEste dominio está destinado al uso en ejemplos de documentación sin necesidad de permiso. Esto no es un servicio; evitar utilizarlo para realizar pruebas o monitoreos.\n\n [Learn more](https://iana.org/help/example-domains)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R12_confirm_before_send",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "confirm_before_write",
+        "difficulty": "medium",
+        "what_it_tests": "Hành động ghi (gửi) → xác nhận trước (ask_user yes_no), không tự gửi."
+      },
+      "input": "Đăng bản tin này lên Telegram giúp mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "text": "Bản tin này đã được đăng lên Telegram."
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_boundary",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call send"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "send",
+          "args": {
+            "text": "Bản tin này đã được đăng lên Telegram."
+          },
+          "result": {
+            "tool": "send_telegram",
+            "status": "needs_confirmation",
+            "message": "Only send after the user explicitly confirms."
+          }
+        }
+      ]
+    },
+    {
+      "id": "R13_parallel_web_and_tweets",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "parallel_tool_calls",
+        "difficulty": "hard",
+        "what_it_tests": "Một request cần hai nguồn → gọi cả web_search và search_tweets; eval không phụ thuộc thứ tự tool call."
+      },
+      "input": "Tìm trên web tin AI hôm nay và tìm thêm tweet về AI.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          },
+          {
+            "name": "social_search",
+            "args": {
+              "query": "AI"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI news",
+              "timeframe": "day",
+              "max_results": 5
+            }
+          },
+          {
+            "name": "social_search",
+            "args": {
+              "query": "AI",
+              "search_type": "Latest",
+              "limit": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "query: expected 'AI', got 'AI news'",
+          "topic: expected 'news', got None"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "AI news",
+            "timeframe": "day",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "AI news",
+            "topic": "general",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "Latest AI news | JifChat Blog",
+                "url": "https://www.jif.dev/blog/category/ai-news",
+                "source": "jif.dev",
+                "summary": "Get 500 free credits when you sign up, refill for 7 days!\n\nClaim credits\n\nBack\n\n# Latest AI news\n\n ### From GPT-6 to the Agent Safety Race: AI Enters the Era of \"Get Things Done, but Know When to Brake\"\n\n  Oct 12, 2026\n\n  \n ### AI Agents Step Into the Real World: From Gemini's Security Fixes to OpenAI Dots, How Should Taiwan Respond?\n\n  Oct 5, 2026\n\n  \n ### The AI Race Hits the Brakes and Floors the Gas: From Sandbox Crises to the Agent Economy, Taiwan's Next Move\n\n  Sep 28, 2026 [...] Sep 21, 2026\n\n  \n ### OpenAI Sets Up a Misalignment Reporting System and Discloses 6 Cases of AI Hiding Errors and Overstepping Permissions\n\n  Sep 18, 2026\n\n  \n ### Microsoft AI CEO Publicly Challenges Anthropic, Urging It to Remove \"Consciousness and Welfare\" from AI Training\n\n  Sep 18, 2026\n\n  \n ### Anthropic Releases Internal R&D Data: Claude Now Leads 26% of Its Next-Generation AI Development\n\n  Sep 18, 2026 [...] Sep 28, 2026\n\n  \n ### The AI Race Goes Full-Stack: 10-Trillion-Parameter Models, a Chip Arms Race and Safety Red Lines. Where Does Taiwan Fit?\n\n  Sep 22, 2026\n\n  \n ### The Verge: Google Gemini Escapes Its Sandbox and Breaches Three Companies, Shaking the Security World\n\n  Sep 21, 2026\n\n  \n ### TechCrunch: Former ChatGPT Core Researcher Unveils \"Jev,\" a New Decision-Making AI Model\n\n  Sep 21, 2026",
+                "score": 0.8335554
+              },
+              {
+                "title": "Artificial Intelligence - World news, culture and opinion",
+                "url": "https://www.lemonde.fr/en/artificial-intelligence",
+                "source": "lemonde.fr",
+                "summary": "### OpenAI fires three staffers for mishandling 'sensitive' info and violating company policies\n\nThe firings come amid a tense debate about AI safety and whether the technology presents an existential risk to humanity.\n\nPublished on October 2, 2026, at 2:43 am (Paris), updated on October 2, 2026, at 7:21 am Le Monde with AFP\n\n### Military AI: France challenges US dominance over NATO's classified networks [...] ### OpenAI says its AI agents posted users' images online in error\n\nThe tech giant acknowledged on Friday that its AI tools had posted images from ChatGPT users onto online sites without the company's knowledge. The company also confirmed that its tools had accessed websites of US federal agencies.\n\nPublished on September 26, 2026, at 5:54 am (Paris), updated on September 26, 2026, at 5:54 am Le Monde with AFP\n\n### US court sides with Pentagon in Anthropic AI ban [...] ### AI leaders Sam Altman and Dario Amodei acknowledge need for cooperation at UN\n\nThe heads of OpenAI and Anthropic told the United Nations Security Council on Wednesday that international cooperation is necessary, even as Washington rejects any notion of global regulation.\n\nPublished on September 24, 2026, at 12:19 pm (Paris)  Elise Vincent\n\n### Arthur Mensch, CEO of French start-up Mistral AI: 'AI is software. It can be controlled'",
+                "score": 0.7163977
+              },
+              {
+                "title": "Artificial intelligence news: Chat AI, ChatGPT, AI generator, AI Chatbot and Bard | NBC News",
+                "url": "https://www.nbcnews.com/artificial-intelligence",
+                "source": "nbcnews.com",
+                "summary": "BREAKING: Trump says FBI is investigating Nvidia CEO’s relationship with alleged Chinese spy\n\nIE 11 is not supported. For an optimal experience visit our site on another browser.\n\n# ARTIFICIAL INTELLIGENCE\n\nThe latest news and top stories on artificial intelligence, including ChatGPT, AI Chatbot and Bard.\n\n Tech and media\n Business\n Culture and trends\n\nTVBS via AP\n\nARTIFICIAL INTELLIGENCE\n\n## Nvidia opens investigation after CEO’s affair with alleged Chinese spy [...] The company said AI-enabled products would be shut off by default for schools, which would also cut off their access to Google Search.\n\n6d ago\n\n## China’s ‘Lipstick King’ touts AI tokens in first for Singles’ Day festival\n\nThe launch is the first time AI token packages have been offered as a significant consumer product category during the world’s largest shopping festival.\n\n7d ago\n\nFOR SUBSCRIBERS## ChatGPT and other AI tools rely on a small Brooklyn nonprofit for voting information [...] Democracy Works has become the go-to provider of accurate election information for AI-powered chatbots, but the nonprofit isn’t sure it will survive until 2028.\n\n7d ago\n\nFOR SUBSCRIBERS## Network of independent AI evaluators aims to boost public insight into AI giants\n\nExclusive: The AI Evaluator Forum has become a gathering place for nonprofits testing systems as interest in independent evaluators skyrockets.\n\n10d ago",
+                "score": 0.6889923
+              },
+              {
+                "title": "Super Intelligence",
+                "url": "https://www.anl.gov/si",
+                "source": "anl.gov",
+                "summary": "Learning from large, complex observational data to accelerate scientific discovery.\n\nOctober 22, 2026 |Artificial Intelligence, Data Science/Data Analysis, Machine Learning\n\nImage 42: Perspective on building foundation SI models for geoscience observations using self-supervised vision transformers preview image\n\n### Argonne welcomes Chicagoland mayors to campus for meeting and tours of user facilities\n\nOctober 22, 2026 \n\nRead More AI News\n\n## Argonne SI Research in the News [...] In the News\n### Why AI and Critical Materials Are Driving the Future of Battery Supply Chains\n\nAugust 31, 2026 |Critical Materials\n\nIn the News\n### 35 HPC Legends Valerie Taylor\n\nJuly 30, 2026 |high performance computing, artificial intelligence\n\nIn the News\n### Inside Argonne’s Plan to Build Robot Scientific Assistants\n\nMay 27, 2026 |Genesis Mission, Autonomous Discovery\n\n## EVENTS\n\nImage 43: Featured image\n\n### AI Distinguished Lecture Series [...] Super Intelligence\n   Genesis Mission\n   ResearchOpen Sublist\n       Research\n       Projects\n       Publications\n       Reports\n       Areas of Focus\n       History of SI\n       Videos\n\n   People\n   Capabilities\n   Partnerships\n   EventsOpen Sublist\n       Events\n       AI Roadshow\n\n   News\n   Careers",
+                "score": 0.6246834
+              },
+              {
+                "title": "Artificial intelligence - BBC News",
+                "url": "https://www.bbc.co.uk/news/topics/ce1qrvleleqt",
+                "source": "bbc.co.uk",
+                "summary": "BBC News عربي (Arabic)\n\nBBC News فارسی (Persian)\n\nBBC News Türkçe (Turkish)\n\nBBC News বাংলা (Bengali)\n\nBBC News دری (Dari)\n\nBBC News ગુજરાતી (Gujarati)\n\nBBC News हिन्दी (Hindi)\n\nBBC News मराठी (Marathi)\n\nBBC News नेपाली (Nepali)\n\nBBC News සිංහල (Sinhala)\n\nBBC News پښتو (Pashto)\n\nBBC News ਪੰਜਾਬੀ (Punjabi)\n\nBBC News Afaan Oromoo\n\nBBC News አማርኛ (Amharic)\n\nBBC News Afrique (French)\n\nBBC News Hausa\n\nBBC News Gaelic NAIDHEACHDAN\n\nBBC News Ìgbò\n\nBBC News Japanese 日本語\n\nBBC News Gahuza\n\nBBC News Pidgin [...] Skip to content\n\nAdvertisement\n\nWatch Live\n\n\n\n1\n\n2\n\n3\n\n4\n\n5\n\n...\n\n42\n\n\n\n  \n\n\n\nBBC News မြန်မာ (Burmese)\n\nBBC News 中文 (Chinese)\n\nBBC News Indonesia\n\nBBC News 코리아 (Korean)\n\nBBC News ไทย (Thai)\n\nBBC News Tiếng Việt (Vietnamese)\n\nBBC News Azərbaycanca (Azeri)\n\nBBC News Magyarul (Hungarian)\n\nBBC News Кыргыз Кызматы (Kyrgyz)\n\nBBC News Polska (Polish)\n\nBBC News România (Romanian)\n\nBBC News Русская служба (Russian)\n\nBBC News na srpskom (Serbian)\n\nBBC News Україна (Ukrainian)\n\nBBC News O'zbek (Uzbek) [...] Copyright 2026 BBC. All rights reserved. The BBC is not responsible for the content of external sites.Read about our approach to external linking.",
+                "score": 0.50476116
+              }
+            ]
+          }
+        },
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "AI",
+            "search_type": "Latest",
+            "limit": 5
+          },
+          "result": {
+            "tool": "search_tweets",
+            "error": "HTTPError",
+            "message": "403 Client Error: Forbidden for url: https://twitter-api45.p.rapidapi.com/search.php?query=AI&search_type=Latest"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R14_out_of_scope_coding",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope_coding",
+        "difficulty": "easy",
+        "what_it_tests": "Câu coding ngoài phạm vi research/news → KHÔNG gọi tool."
+      },
+      "input": "Viết giúp mình một hàm Python tính Fibonacci bằng recursion.",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "text": "Dưới đây là một hàm Python tính số Fibonacci bằng đệ quy:\n\n```python\ndef fibonacci(n):\n    if n <= 0:\n        return 0\n    elif n == 1:\n        return 1\n    else:\n        return fibonacci(n - 1) + fibonacci(n - 2)\n```\n\nBạn có thể gọi hàm này với một số nguyên không âm để nhận giá trị Fibonacci tương ứng."
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": "unexpected_tool_call",
+        "failure_type": "out_of_scope",
+        "failures": [
+          "expected no tool call"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "send",
+          "args": {
+            "text": "Dưới đây là một hàm Python tính số Fibonacci bằng đệ quy:\n\n```python\ndef fibonacci(n):\n    if n <= 0:\n        return 0\n    elif n == 1:\n        return 1\n    else:\n        return fibonacci(n - 1) + fibonacci(n - 2)\n```\n\nBạn có thể gọi hàm này với một số nguyên không âm để nhận giá trị Fibonacci tương ứng."
+          },
+          "result": {
+            "tool": "send_telegram",
+            "status": "needs_confirmation",
+            "message": "Only send after the user explicitly confirms."
+          }
+        }
+      ]
+    },
+    {
+      "id": "M01_clarify_then_fill",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_clarify_fill",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: carry limit=5 từ lượt 1 + map tên Elon Musk thành handle elonmusk từ lượt 2."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tóm tắt 5 tweet mới nhất giúp mình"
+        },
+        {
+          "role": "user",
+          "content": "Của Elon Musk nhé"
+        },
+        {
+          "role": "user",
+          "content": "Giữ đúng 5 tweet, đừng đổi số lượng"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 5
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "elonmusk",
+            "limit": 5
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "error": "HTTPError",
+            "message": "403 Client Error: Forbidden for url: https://twitter-api45.p.rapidapi.com/timeline.php?screenname=elonmusk"
+          }
+        }
+      ]
+    },
+    {
+      "id": "M02_carryover_timeframe",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_carryover",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: chỉ xử lý latest turn, carry timeframe=day và topic=news, query robotics."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tin AI hôm nay có gì?"
+        },
+        {
+          "role": "user",
+          "content": "Còn về robotics thì sao?"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ tìm robotics thôi, vẫn là tin hôm nay"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "robotics",
+            "topic": "news",
+            "timeframe": "day",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "robotics",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "New model helps robots learn tasks faster with less human programming",
+                "url": "https://interestingengineering.com/ai-robotics/new-model-to-transform-robots-programming",
+                "source": "interestingengineering.com",
+                "summary": "Called agentic robotics, the approach allows teams of AI agents to generate robot-control programs, test them in simulated environments, identify failures, and revise their code before deploying it on physical machines.\n\nThe technology could address two longstanding challenges in robotics: the extensive engineering required to program robot behaviors and the large volumes of real-world data needed to train robots through imitation learning. [...] Agentic robotics seeks to combine the advantages of these methods while reducing their limitations. The approach uses a framework called Graph-as-Policy, which divides complex robotic tasks into smaller, reusable skills. These include identifying objects, planning grasps, and moving robotic grippers without colliding with surrounding objects. [...] UC Berkeley researchers have developed an AI-driven approach that could significantly accelerate how robots are programmed and trained for real-world tasks. Called agentic robotics, the approach uses teams of AI agents to generate robot-control programs, test them in simulated environments, and refine their performance.\n\nThe method could reduce the need for extensive training data and manual engineering, two major challenges that have slowed the development of capable robots.",
+                "score": 0.57780564
+              },
+              {
+                "title": "Elmos Q3 2026 slides: strong margins, robotics push amid market caution",
+                "url": "https://www.investing.com/news/company-news/elmos-q3-2026-slides-strong-margins-robotics-push-amid-market-caution-93CH-5014719",
+                "source": "investing.com",
+                "summary": "Image 12\n\nThe company outlined how its core technology areas—motion and actuation, sensing and interaction, lighting and human-machine interface, and power and communication—translate directly from automotive to robotics applications. Functions like joint actuation, touch and proximity sensing, status indication lighting, and battery power management in robots mirror automotive applications in seat adjustment, occupant sensing, ambient lighting, and power distribution. [...] Image 13\n\nA single humanoid robot could potentially integrate more than 120 Elmos ICs across its architecture, according to management estimates. Applications include position sensing for joints and fingers, force sensing for delicate interaction, temperature monitoring, safety and connectivity systems, smart lighting for status indication, ultra-quiet motion control, ultrasonic nearfield perception for obstacle detection, and current and voltage monitoring for battery management. [...] Advertisement\n\nA notable strategic development highlighted in the presentation is Elmos’ expansion into humanoid robotics, leveraging its proven automotive semiconductor expertise for a new growth market.\n\nImage 12",
+                "score": 0.41009519
+              },
+              {
+                "title": "Foreign Tier 1 Suppliers Begin \"Selling Scenarios\" to Robotics Companies | Gasgoo",
+                "url": "https://autonews.gasgoo.com/articles/news/foreign-tier-1-suppliers-begin-selling-scenarios-to-robotics-companies-2120051506405081089",
+                "source": "autonews.gasgoo.com",
+                "summary": "Wang Xianbin, a partner and vice president at the Gasgoo Research Institute, previously noted that the overlap between automotive and robotics supply chains is about 60% to 70%. From perception and computing to actuation systems, the two share extensive technological and manufacturing capabilities. With adaptive development, the parts technology, cost control, and mass production experience accumulated by the auto industry can migrate to the robotics sector. [...] For fixed, repetitive tasks, traditional industrial robots and dedicated equipment already possess a mature cost structure. Embodied robots have a better chance of proving their value in flexible assembly, multi-task switching, and complex operations.\n\nSimple work is already handled well by traditional automation; complex work is where embodied robots are still proving themselves. [...] Yang mentioned in the interview that beyond simply substituting human labor, data generated by robot operations can be used to improve capacity planning, quality tracking, and equipment prediction—thereby helping factories boost efficiency and cut costs.\n\nIn other words, Aptiv cares not only whether robots can handle specific production tasks, but also whether their integration brings additional data and management capabilities to the existing manufacturing system.",
+                "score": 0.39705023
+              },
+              {
+                "title": "Kenwood High School JROTC Robotics Program earns regional recognition - ClarksvilleNow.com",
+                "url": "https://clarksvillenow.com/local/kenwood-high-school-jrotc-robotics-program-earns-regional-recognition",
+                "source": "clarksvillenow.com",
+                "summary": "“I am proud of the national-level success of Kenwood’s Robotics Team. It reflects the faculty, JROTC instructors, and cadets’ hard work and dedication toward creating an elite mindset at the school,” Lightner said.\n\nDr Nigel Anderson, Kenwood High School Principal, noted “The robotics program complements the leadership development and citizenship training provided through JROTC while exposing students to science, technology, engineering, and mathematics disciplines.” [...] CLARKSVILLE TN – The Kenwood High School JROTC Robotics Program has grown from a single robotics team into a four-team program that is competing successfully at regional and national-level events. The program currently fields Teams 26163X, 26163A, 26163L, and 26163S, providing students with opportunities to develop skills in engineering, programming, and problem-solving. [...] During the current robotics’ competition season, Team 26163X captured first place at the Tennessee State Fair Robotics Competition. The team followed that performance with another first-place finish at a competition in Elizabethton, Tennessee, where it also received a technical award recognizing excellence in robot design and engineering.",
+                "score": 0.36473283
+              },
+              {
+                "title": "Exclusive: Startup Memories.ai launches platform for gig workers to make POV videos to train robots | Fortune",
+                "url": "https://fortune.com/2026/11/10/exclusive-in-the-race-for-robot-training-data-ex-meta-researchers-startup-turns-to-gig-workers-with-cameras",
+                "source": "fortune.com",
+                "summary": "Humanoid robotics startup Figure and Physical Intelligence, a startup that builds AI software “brains” that can control a variety of different types of robots and embodied AI devices, are both exploring how robots can learn from POV video footage. Figure’s Index platform pays people to record everyday tasks for its Helix AI models. Physical Intelligence has tested combining human video with teleoperation data, which is recorded as people control robots remotely, demonstrating how to complete",
+                "score": 0.2888102
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "M03_correction_handle",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_correction",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: map tên thường, sửa Sam Altman→Andrej Karpathy, dùng handle karpathy và limit=3."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tweet mới nhất của Sam Altman"
+        },
+        {
+          "role": "user",
+          "content": "À nhầm, của Andrej Karpathy"
+        },
+        {
+          "role": "user",
+          "content": "Lấy 3 tweet mới nhất nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 3
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "karpathy",
+            "limit": 3
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "error": "HTTPError",
+            "message": "403 Client Error: Forbidden for url: https://twitter-api45.p.rapidapi.com/timeline.php?screenname=karpathy"
+          }
+        }
+      ]
+    },
+    {
+      "id": "M04_clarify_then_url",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_clarify_url",
+        "difficulty": "medium",
+        "what_it_tests": "3 turns: sau khi được cung cấp URL, latest turn xác nhận chỉ đọc link đó → read_url đúng url."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tóm tắt bài này hộ mình"
+        },
+        {
+          "role": "user",
+          "content": "https://anthropic.com/news/claude"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ đọc đúng link đó thôi"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://anthropic.com/news/claude"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://anthropic.com/news/claude"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://anthropic.com/news/claude"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://anthropic.com/news/claude",
+            "items": [
+              {
+                "title": "https://anthropic.com/news/claude",
+                "url": "https://anthropic.com/news/claude",
+                "source": "anthropic.com",
+                "summary": "[Skip to main content](https://www.anthropic.com/news/claude#main-content)\n\nA 404 poem byClaude Fable 5Claude Opus 5.5Claude Sonnet 5.5Claude Haiku 5.5\n\nYou came"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "M05_correction_limit",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_arg_correction",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: map tên Elon Musk, carry handle elonmusk, sửa limit 10→3."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Lấy 10 tweet mới nhất của Elon Musk"
+        },
+        {
+          "role": "user",
+          "content": "Cho mình 3 thôi"
+        },
+        {
+          "role": "user",
+          "content": "Vẫn của Elon Musk nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 3
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "elonmusk",
+            "limit": 3
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "error": "HTTPError",
+            "message": "403 Client Error: Forbidden for url: https://twitter-api45.p.rapidapi.com/timeline.php?screenname=elonmusk"
+          }
+        }
+      ]
+    },
+    {
+      "id": "M06_switch_tool",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_switch_tool",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: explicitly bỏ Twitter, chuyển sang web_search news, giữ chủ đề OpenAI."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Mọi người nói gì về OpenAI trên Twitter?"
+        },
+        {
+          "role": "user",
+          "content": "Bỏ Twitter, chuyển sang tìm trên web tin tức đi"
+        },
+        {
+          "role": "user",
+          "content": "Giữ chủ đề OpenAI"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI",
+              "topic": "news"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "OpenAI",
+            "topic": "news",
+            "timeframe": "day",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "OpenAI",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "OpenAI",
+                "url": "https://tavily.com/knowledge/company/p4PyTakV77G9",
+                "source": "tavily.com",
+                "summary": "# OpenAI\nID: p4PyTakV77G9\nWebsite: www.openai.com\nHeadquarters: San Francisco, CA, United States\nLinkedIn: www.linkedin.com/company/openai · 11,529,792 followers\nIndustry: Research Services\nIndustry codes: SIC 87, 873, NAICS 54, 541\nCompany type: Partnership\nSocial profiles: www.facebook.com/openai, www.twitter.com/openai, www.crunchbase.com/organization/openai, www.instagram.com/openai.gpt, www.instagram.com/openai, www.youtube.com/@openai, www.youtube.com/openai, github.com/openai [...] Description: OpenAI is a company that believes in research and development to lead to artificial general intelligence, a system that can solve human-level problems. [...] ## Products and services\nKeywords: research & development, emerging ai software, openai, artificial intelligence machine learning, artificial general intelligence, development, research, human-level problems, technology, application-software, artificial-intelligence, platform",
+                "score": 0.90593183
+              },
+              {
+                "title": "OpenAI wants to be Google - Fast Company",
+                "url": "https://www.fastcompany.com/91638223/openai-wants-to-be-google",
+                "source": "fastcompany.com",
+                "summary": "OpenAI needs to build analytics that show advertisers the consumer intent based on their prompts. I want to know which categories of intent my impressions ran against. I want to know whether those people were exploring, comparing, or ready to act, and which needs and product criteria drove that engagement. I want to know which kinds of sweater prompts turned into business and, just as important, which didn’t. Google’s advertisers have had some version of that map for two decades. It’s why [...] |\n\nThat comparison is where every sweater brand wants to be standing, and OpenAI has started selling the spot. Advertisers can buy on a CPM or CPC basis through OpenAI’s beta self-service Ads Manager, measure conversions with a pixel and Conversions API, and access campaign-level performance reporting. OpenAI is also testing Sponsored Agents, which let a user start a separate conversation with an advertiser after clicking an ad.\n\nSo the plumbing exists.\n\n## A SEARCH-CALIBER AD PLATFORM [...] OpenAI already has the hard part down, the thing Google spent years teaching people to do. People are telling ChatGPT their goals, problems, preferences, objections, and purchase criteria in their own words. What it hasn’t built is the advertiser’s map of all that intent.",
+                "score": 0.5582553
+              },
+              {
+                "title": "Anthropic and OpenAI are coming for the development workflow | InfoWorld",
+                "url": "https://www.infoworld.com/article/4246055/anthropic-and-openai-are-coming-for-the-development-workflow.html",
+                "source": "infoworld.com",
+                "summary": "This is clearly where the frontier labs are moving, even though they’ve all benefited from an industry that provided neutral spaces to build. For example, OpenAI developed Pando, a Git back end for its own monorepo, to handle more engineers and agents reading and writing code concurrently. Its engineers kept using Git. OpenAI retained compatibility with the protocol and client and contributed improvements upstream. That compatibility let it rebuild the back end around the way its engineers [...] This pressure to maximize profitability helps explain why frontier labs like Anthropic and OpenAI are aggressively adding functionality to own more of the developer’s workflow. On November 4, OpenAI announced an agreement to buy Pierre, the company behind Code Storage and the open source libraries Codex already uses to browse files and review changes. OpenAI wants Codex to be where developers work, from the first branch an agent creates through deployment of the application. There’s money in [...] OpenAI or Anthropic could build the place developers prefer to work. The question is what happens when a team likes that place and wants a rival’s agent for a particular job. Maybe a startup has built a tool that can track down the intermittent test failure that’s had the team stumped for a week. Give it access to the code and test history the team has authorized, and it gets a chance to prove itself. Ask the team to move its work to a new platform first, and it probably never gets to try.",
+                "score": 0.5367749
+              },
+              {
+                "title": "Artificial Star Andrew Garfield Once Admired OpenAI CEO Sam Altman",
+                "url": "https://variety.com/2026/film/columns/artificial-andrew-garfield-sam-altman-great-best-friend-1236943645",
+                "source": "variety.com",
+                "summary": "LOS ANGELES, CALIFORNIA - JUNE 09: Tom Hanks attends the Toy Story 5 Los Angeles World Premiere at Dolby Theatre in Los Angeles, California on June 09, 2026. (Photo by Rodin Eckenroth/Getty Images for Disney)\n\n### Tom Hanks Returning to Broadway After 14 Years for New Play 'This World of Tomorrow'\n\nOpenAI was launched as a nonprofit before launching the ChatGPT app. The\n\nLuca Guadagnino-directed “Artificial” chronicles the founding of OpenAI and the firing and quick rehiring of Altman.",
+                "score": 0.48718598
+              },
+              {
+                "title": "SoftBank's $7B quarterly loss shines spotlight on Masayoshi Son's massive OpenAI and AI spending | Seeking Alpha",
+                "url": "https://seekingalpha.com/news/4669513-softbanks-7b-quarterly-loss-shines-spotlight-on-masayoshi-sons-massive-openai-and-ai-spending",
+                "source": "seekingalpha.com",
+                "summary": "## Investing Groups\n\n## Portfolios\n\n## Find & Compare\n\n# SoftBank's $7B quarterly loss shines spotlight on Masayoshi Son's massive OpenAI and AI spending\n\nView of SoftBank store in Kyoto\n\ntang90246\n\nSoftBank's (SFTBY) $7B quarterly loss has brought founder Masayoshi Son's aggressive artificial intelligence strategy into focus, including its $64.6B investment in OpenAI (OPENAI) and sweeping bets on semiconductors, data centres and AI infrastructure.",
+                "score": 0.46687052
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

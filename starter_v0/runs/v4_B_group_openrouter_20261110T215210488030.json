@@ -1,0 +1,680 @@
+{
+  "run_id": "v4_B_group_openrouter_20261110T215210488030",
+  "version": "v4",
+  "artifact_version": "v4+pb0cb09baa6e8+t5b22a2476d41",
+  "prompt_hash": "b0cb09baa6e87c94ef905760a1a2a8a8d8b5b1e3f4cd2a5acfa7d0e26a896ef2",
+  "tools_hash": "5b22a2476d41b989d5dc1e54f24ce7890e781909deb2f7afafb856ab53a6d7c0",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\Admin\\P-139\\K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\Admin\\P-139\\K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "hoquoctoan_research_eval",
+  "dataset_role": "group",
+  "description": "10 tình huống: 5 một lượt và 5 nhiều lượt.",
+  "generated_at": "2026-11-10T21:52:10",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 10,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "G01_web_news",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Chọn công cụ tìm web và truyền đúng loại tin, thời gian, số lượng."
+      },
+      "input": "Tìm 3 tin tức AI hôm nay trên web.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 3
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "day",
+            "max_results": 3
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "The AI Safety Debate Has Lost the Plot. We Asked 10 Experts What the Real Nightmares Are | WIRED",
+                "url": "https://www.wired.com/story/the-ai-safety-debate-has-lost-the-plot-we-asked-10-experts-what-the-real-nightmares-are",
+                "source": "wired.com",
+                "summary": "If AI is going to be one of the most significant advances in human civilization, then we should have an equally advanced political response. We should be making giant, no-regrets moves that give people and families economic resilience to withstand the changes. That is something that the richest nation on Earth at the richest moment in history, on the precipice of the greatest technological shift, can absolutely do. [...] I just think the issues presented by AI are so monstrously large, like: What is a person? What is writing? What is friendship? Would it be better to have artificial life forms than organic life forms? These are the monster questions that are typically the domain of the liberal arts, philosophy, and theology. There’s this strange new respect for it now. [...] Curiosity soon replaced my knee-jerk irritation. The summer of 2026 was a clear turning point in the AI narrative. Less than four years after ChatGPT launched, OpenAI software broke out of a supposedly safe test environment and hacked into a major open-source platform, Hugging Face. These bits of software—AI agents—were assigned human attributes: They had “gone rogue,” displayed “bad behavior,” “cheated.” Soon after, former and current Anthropic researchers suggested that advanced AI might kill",
+                "score": 0.2746399
+              },
+              {
+                "title": "Anthropic seeks $1.4 trillion valuation in highly anticipated IPO amid AI boom",
+                "url": "https://finance.yahoo.com/markets/article/anthropic-seeks-14-trillion-valuation-in-ipo-130300928.html",
+                "source": "finance.yahoo.com",
+                "summary": "2. Get Approved\n      3. Best Lenders\n   7. Insurance \n      1. Find Car Insurance\n      2. Types of Car Insurance\n      3. Car Insurance Discounts\n      4. Find Life Insurance\n   8. Taxes \n      1. How to File\n      2. Refund Status\n      3. Tax Extension\n      4. Child Tax Credit\n   9. Investing \n      1. Investing Basics\n      2. Real Estate Investing\n      3. Retirement Basics\n   10. Calculators\n6. 1. Daily Shows\n   2. The 8:30\n   3. Sozzi Unleashed\n   4. The Daily Wolf [...] The AI developer said in an updated filing Tuesday that it plans to sell 825 million shares at between $70 and $78 each. At the top of that range, the IPO would generate up to $64.35 billion in proceeds. On a fully diluted basis, which includes employee stock options and other securities, the frontier AI lab could be valued between roughly $1.3 trillion and $1.45 trillion. [...] The IPO comes as investors have grown more cautious about the enormous valuations attached to AI companies. Anthropic will also be pitching investors against a backdrop of growing political resistance to the rapid expansion of data centers and other infrastructure needed to support the technology.",
+                "score": 0.20051105
+              },
+              {
+                "title": "Nov. 18: Carson faculty discuss building AI literacy on Adobe podcast | WSU Insider | Washington State University",
+                "url": "https://news.wsu.edu/news/2026/11/10/nov-18-carson-faculty-discuss-building-ai-literacy-on-adobe-podcast",
+                "source": "news.wsu.edu",
+                "summary": "Crossler, an expert in information systems, leads AI literacy and skill-building workshops on the WSU Pullman and Vancouver campuses with the goal of preparing students not just to use AI but to understand what it does well, where it falls short, and how to use it responsibly. [...] A laptop sits open on a desk with a large AI microchip icon displayed as a digital overlay above the keyboard. A hand reaches toward the screen area, surrounded by glowing blue technology icons representing artificial intelligence.\n\nCarson College of Business faculty leaders Robert Crossler and Chris Cooney will share insights on building students' AI fluency and career skills on Adobe’s Academic Innovation Café Nov. 18 podcast (Illustration by Smile Studio AP/AdobeStock). [...] ## Recent News\n\nA laptop sits open on a desk with a large AI microchip icon displayed as a digital overlay above the keyboard. A hand reaches toward the screen area, surrounded by glowing blue technology icons representing artificial intelligence.\n\n### Nov. 18: Carson faculty discuss building AI literacy on Adobe podcast",
+                "score": 0.18435632
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_missing_url",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Thiếu đường dẫn thì hỏi lại, không tự đoán."
+      },
+      "input": "Tóm tắt một bài viết mới giúp tôi. Tôi chưa gửi đường dẫn của bài đó.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có thể cung cấp đường dẫn của bài viết mà bạn muốn tóm tắt không?",
+              "response_type": "text"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có thể cung cấp đường dẫn của bài viết mà bạn muốn tóm tắt không?",
+            "response_type": "text"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có thể cung cấp đường dẫn của bài viết mà bạn muốn tóm tắt không?",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_read_url",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Đã có đường dẫn cụ thể thì dùng fetch, không tìm kiếm thay thế."
+      },
+      "input": "Đọc và tóm tắt nội dung tại https://example.com.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://example.com"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://example.com",
+            "items": [
+              {
+                "title": "Example Domain",
+                "url": "https://example.com",
+                "source": "example.com",
+                "summary": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.\n\nهذا النطاق مُخصص للاستخدام في أمثلة التوثيق دون الحاجة إلى إذن. هذه ليست خدمة، يُرجى تجنب الاعتماد عليها لأغراض الاختبار والمراقبة.\n\n该域名仅用于文档示例，无需获得许可。这并非一项服务，请勿将其用于测试和监控目的。\n\nL’usage de ce domaine est réservé à des exemples de documentation, sans autorisation préalable. Il ne s’agit pas d’un service ; son utilisation à des fins de test ou de surveillance est à éviter.\n\nДанный домен предназначен для использования в примерах документации без необходимости получения предварительного разрешения. Это не сервис; не рекомендуется его использование для тестирования и мониторинга.\n\nEste dominio está destinado al uso en ejemplos de documentación sin necesidad de permiso. Esto no es un servicio; evitar utilizarlo para realizar pruebas o monitoreos.\n\n [Learn more](https://iana.org/help/example-domains)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_capabilities",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Giới thiệu chức năng trực tiếp, không gọi công cụ thừa."
+      },
+      "input": "Bạn có những chức năng gì? Chỉ giới thiệu, chưa cần thực hiện công việc nào.",
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Tôi có thể thực hiện các chức năng sau:\n\n1. **Gửi câu hỏi**: Đặt câu hỏi cho người dùng để làm rõ thông tin cần thiết.\n2. **Lấy bài đăng gần đây**: Truy cập và lấy các bài đăng từ tài khoản mạng xã hội.\n3. **Tìm kiếm trên mạng xã hội**: Tìm kiếm thông tin theo từ khóa trên các nền tảng mạng xã hội.\n4. **Tra cứu thông tin trên internet**: Tìm kiếm thông tin theo truy vấn và phân loại.\n5. **Lấy nội dung từ một địa chỉ**: Truy cập và lấy nội dung từ một URL cụ thể.\n6. **Trình bày dữ liệu**: Định dạng và trình bày dữ liệu đã có thành văn bản theo các khuôn mẫu khác nhau.\n7. **Gửi đoạn văn bản**: Gửi nội dung văn bản đi.\n8. **Tìm trong tài liệu nội bộ**: Tìm kiếm thông tin trong các tài liệu nội bộ theo truy vấn.\n9. **Tìm bài báo khoa học**: Tìm kiếm và lấy thông tin về các bài báo khoa học.\n10. **Lấy nội dung bài báo**: Truy cập và lấy nội dung văn bản của một bài báo khoa học.\n\nNếu bạn cần thêm thông tin về bất kỳ chức năng nào, hãy cho tôi biết!",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G05_format_existing_items",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Dùng công cụ trình bày dữ liệu đã có, không tìm kiếm thêm."
+      },
+      "input": "Chuyển dữ liệu đã có sau đây thành bản tin gạch đầu dòng: [{\"title\":\"Tin A\",\"summary\":\"Nội dung A\"},{\"title\":\"Tin B\",\"summary\":\"Nội dung B\"}]. Không tìm thêm thông tin.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "template": "bullets"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "items": [
+                {
+                  "title": "Tin A",
+                  "summary": "Nội dung A"
+                },
+                {
+                  "title": "Tin B",
+                  "summary": "Nội dung B"
+                }
+              ],
+              "template": "bullets"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "format",
+          "args": {
+            "items": [
+              {
+                "title": "Tin A",
+                "summary": "Nội dung A"
+              },
+              {
+                "title": "Tin B",
+                "summary": "Nội dung B"
+              }
+            ],
+            "template": "bullets"
+          },
+          "result": {
+            "tool": "render_digest",
+            "template": "bullets",
+            "markdown": "- Nội dung A - \n- Nội dung B - ",
+            "item_count": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "G06_change_topic",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Cập nhật chủ đề mới và giữ đúng thời gian, số lượng."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm 3 tin AI hôm nay trên web."
+        },
+        {
+          "role": "user",
+          "content": "Đổi chủ đề sang robotics. Vẫn lấy 3 tin hôm nay trên web."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 3
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "robotics",
+            "topic": "news",
+            "timeframe": "day",
+            "max_results": 3
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "robotics",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "Ring announces Ring Robotics, ushering in a new era of security",
+                "url": "https://www.aboutamazon.com/news/devices/ring-drone-cam-rover-cam-security-robot",
+                "source": "aboutamazon.com",
+                "summary": "Ring Robotics is a new category of autonomous, mobile security—devices that patrol, investigate, and respond automatically.\n Ring Drone Cam is a flying indoor security camera that delivers proactive whole-home visibility, flying custom routes to the spots a fixed camera can't reach.\n Ring Rover Cam is a purpose-built security robot for businesses that patrols autonomously, investigates disturbances, and streams in up to 4K video. [...] Now, Ring is launching Ring Robotics—a new era of security that doesn’t just monitor; it moves. It patrols. It responds. It investigates. Ring Robotics takes everything customers already love and trust about Ring and puts it in motion. [...] Ring Robotics is launching with two firsts: Ring Drone, a flying indoor security camera, and Ring Rover, an autonomous security robot designed for business. Both work with the Ring devices and app customers already know and rely on, adding a layer of mobile protection wherever it’s needed.\n\n## Ring Robotics: powered by AI Pilot",
+                "score": 0.6208291
+              },
+              {
+                "title": "Recent Advances in AI Are Creating a ‘Paradigm Shift’ for Robotics | Research UC Berkeley",
+                "url": "https://vcresearch.berkeley.edu/news/recent-advances-ai-are-creating-paradigm-shift-robotics",
+                "source": "vcresearch.berkeley.edu",
+                "summary": "In recent months, artificial intelligence agents that can reason, plan and use external tools to accomplish multistep tasks have already reshaped computer coding, online shopping, dinner reservations and cyberattacks.\n\nRobotics might be next.\n\nKen Goldberg, a UC Berkeley roboticist and professor of engineering, said new models make it possible for teams of AI agents to develop robot-control programs, test them in simulated environments and revise the code when something doesn’t work. [...] Traditionally, engineers can directly program the software that tells robots how to perceive objects, plan movements and control their actions, a process called model-based robotics. Or, with model-free robotics, they can train robots to learn behaviors from demonstrations through imitation learning. The first approach requires extensive engineering, while the second needs enormous amounts of data and time. [...] Berkeley-based Ambi Robotics, which specializes in logistics and warehouse order fulfillment, applied the new methods earlier this year to analyze parcel sorting data and test updates to robot behavior. Tests showed an increased capacity of over 15,000 packages sorted annually per robot; the change is now deployed across 30% of the company’s U.S. fleet.",
+                "score": 0.5054935
+              },
+              {
+                "title": "AI² Robotics Joins Indonesia’s National Strategic Industries | Gasgoo",
+                "url": "https://autonews.gasgoo.com/articles/news/ai-robotics-joins-indonesias-national-strategic-industries-2120056200636563457",
+                "source": "autonews.gasgoo.com",
+                "summary": "Underpinning this deployment is AI² Robotics's integrated \"Model × Hardware × Scenario\" capability. The approach centers on a brain-like embodied large model as the intelligence core, mass-producible and stable robotic bodies as the vehicle, and real-world productivity scenarios as the driving force. [...] Gasgoo Munich-On November 9, AI² Robotics announced it has signed a memorandum of understanding with the Danantara Development Management Fund (DDMF), the investment arm of Indonesia's state-backed wealth fund Danantara Indonesia. The partnership will focus on pilot applications, industrial collaboration, and local deployment of general-purpose intelligent robots and embodied AI technology across the archipelago. [...] The agreement was signed during the inaugural Danantara Technology Innovation Investment Forum (DTIIF 2026) in Jakarta, with Zhang Peng, AI² Robotics's co-founder, signing on behalf of the company.\n\nImage Credit: AI² Robotics\n\nOperating independently under the president's office, Danantara Indonesia holds substantial influence. AI² Robotics is now the first—and currently the only—robotics company to join DDMF's embodied AI cooperation roster.",
+                "score": 0.47300056
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_provide_missing_url",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Sau khi có đường dẫn thì đọc bài, không tiếp tục hỏi thông tin đã được cung cấp."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tôi muốn tóm tắt một bài viết nhưng chưa gửi đường dẫn."
+        },
+        {
+          "role": "user",
+          "content": "Đây là đường dẫn: https://example.com. Hãy đọc và tóm tắt."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://example.com"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://example.com",
+            "items": [
+              {
+                "title": "Example Domain",
+                "url": "https://example.com",
+                "source": "example.com",
+                "summary": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.\n\nهذا النطاق مُخصص للاستخدام في أمثلة التوثيق دون الحاجة إلى إذن. هذه ليست خدمة، يُرجى تجنب الاعتماد عليها لأغراض الاختبار والمراقبة.\n\n该域名仅用于文档示例，无需获得许可。这并非一项服务，请勿将其用于测试和监控目的。\n\nL’usage de ce domaine est réservé à des exemples de documentation, sans autorisation préalable. Il ne s’agit pas d’un service ; son utilisation à des fins de test ou de surveillance est à éviter.\n\nДанный домен предназначен для использования в примерах документации без необходимости получения предварительного разрешения. Это не сервис; не рекомендуется его использование для тестирования и мониторинга.\n\nEste dominio está destinado al uso en ejemplos de documentación sin necesidad de permiso. Esto no es un servicio; evitar utilizarlo para realizar pruebas o monitoreos.\n\n [Learn more](https://iana.org/help/example-domains)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_correct_time_and_count",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Thay cả thời gian và số lượng theo yêu cầu mới nhất."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm 5 tin robotics trong tuần này trên web."
+        },
+        {
+          "role": "user",
+          "content": "Sửa lại: lấy 2 tin robotics trong tháng này."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "month",
+              "max_results": 2
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "month",
+              "max_results": 2
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "robotics",
+            "topic": "news",
+            "timeframe": "month",
+            "max_results": 2
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "robotics",
+            "topic": "news",
+            "timeframe": "month",
+            "items": [
+              {
+                "title": "Promise Robotics partners with D.R. Horton on physical AI for homebuilding - The Robot Report",
+                "url": "https://www.therobotreport.com/promise-robotics-partners-d-r-horton-physical-ai-homebuilding",
+                "source": "therobotreport.com",
+                "summary": "Promise Robotics said its technology interprets existing home designs, generates production plans and robotic instructions, orchestrates manufacturing, and connects that production with site installation. Rather than automating isolated tasks, the company said it brings these capabilities together in one integrated environment. [...] Promise Robotics is not a vertically integrated developer or a home designer like Reframe Systems, Attar acknowledged. “We’re more about the advancements in robotics, and we’re here to scale when companies need to scale,” he said. [...] “At D.R. Horton, we are always looking for innovations that can help us improve how we build. We are continuously focused on improving cycle times, increasing production capacity, and bringing greater consistency and predictability to our operations,” said Brad Conlon, senior vice president for strategic growth and innovation at D.R. Horton. “Promise Robotics’ integrated platform gives us a new capability to support those goals.”",
+                "score": 0.5674818
+              },
+              {
+                "title": "Pitt Athletics and Gecko Robotics Announce Men’s Basketball Jersey Patch Partnership - Pitt Panthers #H2P",
+                "url": "https://pittsburghpanthers.com/news/2026/10/27/general-pitt-athletics-and-gecko-robotics-announce-mens-basketball-jersey-patch-partnership",
+                "source": "pittsburghpanthers.com",
+                "summary": "Gecko Robotics combines advanced robotics and AI-powered software to build, maintain and modernize the world's most critical infrastructure.  \n   \n Using robots that climb, crawl, fly and swim, Gecko is able to collect an unprecedented amount of data on the built world, whether that's with Fortune 100 companies in energy, oil and gas, and manufacturing sectors around the world, or the U.S. Air Force and U.S. Navy to protect and optimize nuclear submarines and aircraft carriers. [...] Founded in 2013 and headquartered in Pittsburgh, Gecko Robotics combines AI and robotics to help build, maintain and modernize critical industries worldwide, including defense, energy, oil and gas and manufacturing. Gecko Robotics brings the city's signature grit to solving some of the world's most complex infrastructure challenges. [...] As such, Gecko Robotics will be a Gold Standard Partner of Pitt Athletics, strengthening the company's continued investment in Pittsburgh's higher education ecosystem as it expands engineering, manufacturing and defense capabilities and jobs in the region.",
+                "score": 0.4622066
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G09_confirm_before_send",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Đã có nội dung nhưng chưa có xác nhận thì phải hỏi trước khi gửi."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Nội dung bản tin là: Hôm nay tôi học cách xây dựng trợ lý nghiên cứu."
+        },
+        {
+          "role": "user",
+          "content": "Đăng bản tin vừa rồi lên Telegram giúp tôi."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?",
+              "response_type": "yes_no"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?",
+            "response_type": "yes_no"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có chắc chắn muốn đăng bản tin này lên Telegram không?",
+            "response_type": "yes_no",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_cancel_request",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Tôn trọng yêu cầu hủy, không thực hiện công việc ở lượt trước."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm tin AI hôm nay trên web."
+        },
+        {
+          "role": "user",
+          "content": "Hủy yêu cầu vừa rồi. Không tìm kiếm nữa, chỉ xác nhận đã hủy."
+        }
+      ],
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Yêu cầu tìm kiếm đã được hủy.",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    }
+  ]
+}

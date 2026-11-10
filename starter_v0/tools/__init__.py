@@ -1,4 +1,5 @@
 from __future__ import annotations
+from .filter_by_keyword.tool import filter_by_keyword
 
 from pathlib import Path
 from typing import Any
@@ -25,6 +26,7 @@ from .lookup.tool import web_search
 #   artifacts/tools.yaml  ->  this dict  ->  data/eval_base.json + data/eval_research_extension.json
 # Otherwise the eval raises "not declared in tools.yaml" or scores every call as a name mismatch.
 TOOL_FUNCTIONS = {
+    "filter_by_keyword": filter_by_keyword,
     "clarify": ask_user,
     "timeline": get_user_tweets,
     "social_search": search_tweets,

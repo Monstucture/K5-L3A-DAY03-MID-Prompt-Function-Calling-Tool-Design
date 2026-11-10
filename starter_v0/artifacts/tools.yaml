@@ -123,3 +123,22 @@ tools:
         max_pages: {type: integer, default: 5, description: "Số trang"}
         max_chars: {type: integer, default: 8000, description: "Số ký tự"}
       required: [arxiv_url]
+  - name: filter_by_keyword
+    description: "Lọc danh sách tin đã có theo từ khóa trong tiêu đề hoặc tóm tắt. Không tìm dữ liệu mới trên web."
+    parameters:
+      type: object
+      properties:
+        items:
+          type: array
+          description: "Danh sách tin đã có"
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              summary:
+                type: string
+        keyword:
+          type: string
+          description: "Từ khóa cần lọc"
+      required: [items, keyword]
