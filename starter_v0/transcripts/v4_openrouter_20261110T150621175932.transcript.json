@@ -1,0 +1,16 @@
+{
+  "transcript_id": "v4_openrouter_20261110T150621175932",
+  "version": "v4",
+  "artifact_version": "v4+p89dc4d92f92d+t444618bde9be",
+  "prompt_hash": "89dc4d92f92d89133113d78f9ee7f778c6db8fc421c254b49acec36dd02e832d",
+  "tools_hash": "444618bde9be6e6678ed121b44a279d251f38efaabe14741f7e8ddf233c4712c",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\monst\\OneDrive\\Desktop\\Git Repo\\K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\monst\\OneDrive\\Desktop\\Git Repo\\K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design\\starter_v0\\artifacts\\tools.yaml",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "created_at": "2026-11-10T15:06:21",
+  "updated_at": "2026-11-10T15:06:26",
+  "turns": []
+}

@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -57,6 +58,9 @@ def main() -> None:
     rows: list[dict[str, Any]] = []
     for path in iter_run_files(args.paths):
         run = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(run, dict) or "results" not in run:
+            print(f"Skipping {path}: not a run file", file=sys.stderr)
+            continue
         for item in run.get("results", []):
             rows.append(row_for(run, item))
 
@@ -75,7 +79,6 @@ def main() -> None:
         print(f"Saved {len(rows)} rows to {args.output}")
         return
 
-    import sys
 
     writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
     writer.writeheader()

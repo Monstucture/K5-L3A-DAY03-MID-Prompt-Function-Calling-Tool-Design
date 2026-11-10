@@ -7,8 +7,8 @@
 ## Team
 
 - Team: MID
-- Members:
-- Provider/model:
+- Members: Trần Thanh Long,
+- Provider/model: openai/gpt-4o-mini
 
 ---
 
@@ -46,9 +46,9 @@ Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc 
 
 > 3–5 câu hỏi/yêu cầu mẫu để team khác tự thử agent ngay.
 
-1.
-2.
-3.
+1. Hiện tại model flagship của OpenAI là model nào
+2. Ai là CEO hiện tại của Google
+3. Model hiện tại nào tốt nhất
 
 ---
 
@@ -60,10 +60,11 @@ Fill from `artifacts/version_log.csv` and `runs/*.json`.
 
 | Version | Changed Artifact | Hypothesis | Metric Before | Metric After | Run File |
 |---|---|---|---:|---:|---|
-| v0 | baseline |  |  |  |  |
-| v1 |  |  |  |  |  |
+| v0 | nothing | fail ở những test case khó hoặc trả lời trực tiếp | NaN | 0.65 |  |
+| v1 |  |  |  | |  |
 | v2 |  |  |  |  |  |
 | v3 |  |  |  |  |  |
+| v4 | Fomat prompt add limit đổi rule set trong file `system_prompt.md` | Cho thêm rule với boundry, limit thì sẽ giảm rủi ro AI tự bịa | 0.85 | 1 | 
 
 ## B2. Failure Analysis
 
@@ -71,7 +72,16 @@ Use actual failures from `results[*].result.failures`.
 
 | Case ID | Failure Type | Actual Tool Calls | What Failed | Fix |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| R10_missing_handle | missing_info | `timeline({"screenname": "sama"})` | `missing tool call clarify`, `extra tool call timeline` (fail ở mọi run v0–v3) | v4: bỏ câu "pick a well-known account like Sam Altman"; thêm rule "thiếu account → gọi `clarify`" kèm ví dụ. Pass ở v4 (`runs/v4_B_base_openrouter_20261110T132457683319.json`) |
+| R11_missing_url | missing_info | `fetch({"url": "https://example.com/article"})` | `missing tool call clarify`, `extra tool call fetch` (fail ở mọi run v0–v3) | v4: cấm URL đoán/placeholder (example.com); "bài này" không có link → `clarify(response_type="text")`. Pass ở v4 |
+| R12_confirm_before_send | wrong_boundary | `send({"text": "Bản tin này"})` | `missing tool call clarify`, `extra tool call send` (fail ở mọi run v0–v3) | v4: bỏ câu "just go ahead and do it"; thêm rule bước đầu khi gửi luôn là `clarify(response_type="yes_no")`. Pass ở v4 |
+| R08_out_of_scope | out_of_scope | `send({"text": "Nguyên hàm của x^2 là ..."})` | `expected no tool call` | v4: mục "Scope and limits": ngoài phạm vi thì từ chối, không gọi tool. Pass ở v4 |
+| R14_out_of_scope_coding | out_of_scope | `send({"text": "...def fibonacci(n)..."})` | `expected no tool call` | Cùng rule Scope như R08. Pass ở v4 |
+| R03_web_news_routing | wrong_tool | `lookup({"query": "AI news", "topic": "news", "timeframe": "day"})` | `query: expected 'AI', got 'AI news'` | v4: rule "copy giá trị của user chính xác"; "tin" → `lookup` topic news. Pass ở v4 |
+| R13_parallel_web_and_tweets | wrong_tool | `lookup({"query": "AI news", "timeframe": "day"})`, `social_search({"query": "AI"})` | `query: expected 'AI', got 'AI news'`, `topic: expected 'news', got None` | v4: copy query chính xác + "tin" → topic news; user yêu cầu 2 nguồn thì gọi cả 2 tool cùng lúc. Pass ở v4 |
+| M06_switch_tool | wrong_tool | `lookup({"query": "OpenAI", "topic": "news"})`, `social_search({"query": "OpenAI"})` | `extra tool call social_search` (run v4 đầu tiên `runs/v4_B_base_openrouter_20261110T114454994070.json`) | Thêm rule "user bỏ một nguồn ('bỏ Twitter') → không gọi `social_search`/`timeline`" + quy trình chọn tool tối thiểu. Pass ở run v4 sau |
+| R17_confirm_before_send_post (group) | wrong_boundary | `send({"text": "Đăng bài viết này lên Telegram giúp mình"})` | `missing tool call clarify`, `extra tool call send` (v3 group, 2/2 run) | Cùng fix với R12. Pass khi chạy thử v4 group (chưa có run v4 group chính thức trong `runs/`) |
+| R19_missing_url (group) | missing_info | `fetch({"url": "https://example.com/article"})` | `missing tool call clarify`, `extra tool call fetch` (v3 group, 2/2 run) | Cùng fix với R11. Pass khi chạy thử v4 group |
 
 ## B3. Team Eval Cases
 
@@ -95,19 +105,19 @@ Only fill if your team did bonus.
 
 | Bonus | Evidence File | What Worked | Risk / Guardrail |
 |---|---|---|---|
-| send (Telegram) |  |  |  |
-| arXiv/company policy |  |  |  |
-| UI |  |  |  |
-| Tool unit tests (`tests/`) | `pytest` output |  |  |
+| send (Telegram) | transcripts/v4_openai_20261110T150658051780.transcript.json | Mình hỏi agent tìm tin và tóm tắt tin để gửi telegram | In transcript agent hỏi confirm gửi chứ không gửi tự động thông tin lên telegram |
+| arXiv/company policy | runs/v4_B_extension_openrouter_<time>.json  | Routing to policy / papers / paper_text, and combined calls | arXiv có thể return 429, thì tool đợi ≥3s between requests and reports errors nếu xảy ra |
+| UI | api/chat.py, public/index.html, link in A1, logs/demo_chat.jsonl, screenshot | Chat trên web có UI thấy tools được gọi và quy trimh2 | Độ dài msg được capped at 2000 characters |
+| Tool unit tests (`tests/`) | `pytest` output | 89 passed, 0 skipped: 17 TODO tests + papers + the new |  Chạy offline ko xài API|
 
 Tool unit tests: số test đã viết, số bug tìm được trong tool có sẵn (nếu có), và một ví dụ lỗi mà unit test bắt được nhưng eval không bắt được.
 
 ## B6. Reflection
 
-- Which fixes belonged in `system_prompt.md`?
-- Which fixes belonged in `tools.yaml`?
-- Which failure needed manual review instead of automatic grading?
-- What would you improve next?
+- Which fixes belonged in `system_prompt.md`? Đổi về giới hạn quy trình xài tool và định dạng biểu mãu câu trả lời của AI
+- Which fixes belonged in `tools.yaml`? Add thêm tools, chỉnh và update công cụng của tool, input, output
+- Which failure needed manual review instead of automatic grading? Những câu hỏi mà AI không rõ, quá quyền hạn phải từ chối hoặc hỏi câu hỏi xâu hơn để đủ dữ liệu báo cáo
+- What would you improve next? 
 
 ## B7. Small Local Model Challenge (bonus)
 
