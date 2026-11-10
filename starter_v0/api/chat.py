@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from chat import ARTIFACTS_DIR, run_model_tool_loop, trim_history  # noqa: E402  (chat.py also loads .env)
+from chat import ARTIFACTS_DIR, json_text, run_model_tool_loop, trim_history  # noqa: E402  (chat.py also loads .env)
 from providers import make_provider  # noqa: E402
 from tools import load_tool_declarations, to_openai_tools  # noqa: E402
 
@@ -59,8 +59,24 @@ class handler(BaseHTTPRequestHandler):
             )
         except Exception as exc:
             return self._json(502, {"error": f"{type(exc).__name__}: {exc}"})
-        tool_calls = [c for r in result["rounds"] for c in r["tool_calls"]]
-        self._json(200, {"status": result["status"], "reply": result["assistant_text"], "tool_calls": tool_calls})
+        # One entry per model round: what it said, which tools it called, and a trimmed view of each result.
+        steps = [
+            {
+                "round": r["round"],
+                "assistant_text": r["assistant_text"],
+                "tools": [
+                    {
+                        "name": e["tool"],
+                        "args": e["args"],
+                        "ok": not (isinstance(e["result"], dict) and "error" in e["result"]),
+                        "result": json_text(e["result"], max_chars=800),
+                    }
+                    for e in r["tool_results"]
+                ],
+            }
+            for r in result["rounds"]
+        ]
+        self._json(200, {"status": result["status"], "reply": result["assistant_text"], "steps": steps})
 
     # Local dev only: Vercel serves public/ itself.
     def do_GET(self) -> None:
