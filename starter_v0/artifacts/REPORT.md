@@ -7,7 +7,7 @@
 ## Team
 
 - Team: MID
-- Members: Trần Thanh Long,
+- Members: Trần Thanh Long, Quách Ngọc Phúc
 - Provider/model: openai/gpt-4o-mini
 
 ---
@@ -41,6 +41,7 @@ Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc 
 | policy | Tìm trong tài liệu nội bộ | không |
 | papers | Tìm bài báo khoa học| không |
 | paper_text | Lấy nội dung text của một bài báo | không |
+| _digest_5min | Fomat thông tin và link từ báo cáo user search để tạo 5min newsletter theo fomat | Có |
 
 ## A3. Câu hỏi mẫu để thử
 
