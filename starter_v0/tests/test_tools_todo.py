@@ -13,7 +13,16 @@ from __future__ import annotations
 import pytest
 
 from conftest import FakeResponse  # noqa: F401  (you will need it)
+from tools.clarify.tool import ask_user
 from tools import TOOL_FUNCTIONS  # noqa: F401
+
+format_tool = TOOL_FUNCTIONS["format"]
+lookup_tool = TOOL_FUNCTIONS["lookup"]
+send_tool = TOOL_FUNCTIONS["send"]
+clarify_tool = TOOL_FUNCTIONS["clarify"]
+social_search_tool = TOOL_FUNCTIONS["social_search"]
+timeline_tool = TOOL_FUNCTIONS["timeline"]
+fetch_tool = TOOL_FUNCTIONS["fetch"]
 
 TODO = "TODO(student): implement this test"
 
@@ -23,8 +32,14 @@ TODO = "TODO(student): implement this test"
 def test_clarify_choice_returns_options_and_awaits_user() -> None:
     # Call clarify with response_type="choice" and 2 options.
     # Assert: options are returned unchanged, awaiting_user is True.
-    pytest.skip(TODO)
-
+    #pytest.skip(TODO)
+    options = ["Option A", "Option B"]
+    result = clarify_tool(question="Choose one:", response_type="choice", options=options)
+    
+    # Assert: options are returned unchanged, awaiting_user is True.
+    assert result["options"] == options
+    assert result["awaiting_user"] is True
+    assert result["response_type"] == "choice"
 
 # ---------------- format ----------------
 
