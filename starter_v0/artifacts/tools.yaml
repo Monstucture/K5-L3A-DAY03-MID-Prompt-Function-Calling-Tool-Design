@@ -93,7 +93,9 @@ tools:
   - name: format
     description: >-
       Trình bày các item đã tìm được thành bản tin markdown. DÙNG KHI: người dùng muốn bản tin/digest/tổng hợp và bạn
-      ĐÃ có items từ lookup, social_search, community, timeline hoặc papers. KHÔNG DÙNG: trước khi tìm kiếm, hoặc
+      ĐÃ có items từ lookup, social_search, community, timeline hoặc papers. Khi người dùng muốn "bản tin", "newsletter",
+      "digest", "tóm tắt nhanh/5 phút" mà không chỉ định kiểu khác thì dùng template digest_5min và điền searched_with
+      bằng các tool + từ khóa đã dùng. KHÔNG DÙNG: trước khi tìm kiếm, hoặc
       với nội dung tự bịa ra. SAU ĐÓ: trả bản tin cho người dùng; chỉ gửi đi khi họ yêu cầu và đã xác nhận (send).
     parameters:
       type: object
@@ -110,8 +112,9 @@ tools:
               source: {type: string}
               summary: {type: string}
               section: {type: string}
-        template: {type: string, enum: [brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "brief = tối đa 5 dòng ngắn; sections = nhóm theo section; bullets = danh sách; thread = đánh số 1/, 2/ như thread; daily_ai_vn = bản tin AI hằng ngày tiếng Việt."}
+        template: {type: string, enum: [digest_5min, brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "digest_5min = bản tin đọc nhanh 5 phút: danh sách đánh số 1., 2., ... mỗi tin kèm link, cuối có mục Nguồn & tài liệu và cách agent đã tìm (tối đa 10 tin); brief = tối đa 5 dòng ngắn; sections = nhóm theo section; bullets = danh sách; thread = đánh số 1/, 2/ như thread; daily_ai_vn = bản tin AI hằng ngày tiếng Việt."}
         headline: {type: string, default: "", description: "Tiêu đề bản tin (tùy chọn)."}
+        searched_with: {type: array, default: [], items: {type: string}, description: "Chỉ cho digest_5min: các tool và từ khóa đã dùng để tìm, mỗi dòng một bước, ví dụ [\"lookup: AI (news, day)\", \"community: GPT-5 (all)\"]."}
       required: [items, template]
 
   # ---------------- Bonus tools ----------------

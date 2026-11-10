@@ -317,3 +317,34 @@ def test_community_all_sources_failing_returns_error_dict(monkeypatch) -> None:
 
     assert result["error"] == "RuntimeError"
     assert "All sources failed" in result["message"]
+
+
+# ---------------- format: digest_5min (5-minute newsletter) ----------------
+
+def test_digest_5min_numbers_items_with_links_and_lists_sources_and_searches() -> None:
+    items = [
+        {"title": "GPT-6 ra mắt", "url": "https://www.theverge.com/a", "source": "theverge.com", "summary": "OpenAI công bố GPT-6."},
+        {"title": "Spain wins", "url": "https://bbc.com/b", "summary": "Spain beat Argentina 1-0."},
+        {"title": "Duplicate link", "url": "https://bbc.com/b"},
+    ]
+
+    markdown = TOOL_FUNCTIONS["format"](
+        items, template="digest_5min", headline="Bản tin AI", searched_with=["lookup: AI (news, day)"]
+    )["markdown"]
+
+    assert markdown.startswith("# Bản tin AI")
+    assert "1. **GPT-6 ra mắt** — OpenAI công bố GPT-6.\n   🔗 [theverge.com](https://www.theverge.com/a)" in markdown
+    assert "2. **Spain wins**" in markdown and "3. **Duplicate link**" in markdown
+    sources = markdown.split("Nguồn & tài liệu tham khảo")[1].split("Agent đã tìm bằng")[0]
+    assert sources.count("https://bbc.com/b") == 1  # each source listed once
+    assert "- lookup: AI (news, day)" in markdown
+
+
+def test_digest_5min_caps_items_and_handles_empty_input() -> None:
+    many = [{"title": f"t{i}", "url": f"https://x.com/{i}"} for i in range(15)]
+
+    result = TOOL_FUNCTIONS["format"](many, template="digest_5min")
+
+    assert "10. **t9**" in result["markdown"] and "11. " not in result["markdown"]
+    empty = TOOL_FUNCTIONS["format"](None, template="digest_5min")["markdown"]
+    assert "Chưa có tin nào" in empty and "Agent đã tìm bằng" not in empty
