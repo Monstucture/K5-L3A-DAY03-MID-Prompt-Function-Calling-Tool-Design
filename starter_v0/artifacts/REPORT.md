@@ -7,8 +7,8 @@
 ## Team
 
 - Team: MID
-- Members:
-- Provider/model:
+- Members: Trần Thanh Long, 
+- Provider/model: openrouter 
 
 ---
 
@@ -64,6 +64,7 @@ Fill from `artifacts/version_log.csv` and `runs/*.json`.
 | v1 |  |  |  |  |  |
 | v2 |  |  |  |  |  |
 | v3 |  |  |  |  |  |
+| v4 | `system_prompt.md` | 
 
 ## B2. Failure Analysis
 
