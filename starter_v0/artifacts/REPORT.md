@@ -133,11 +133,8 @@ Only fill if your team did the local model challenge.
 
 | Version | Model (provider) | Prompt/Tools | case_accuracy | tool_routing | argument | multiturn | Run File |
 |---|---|---|---|---|---|---|---|
-| v3 | (cloud) | v3 |  |  |  |  |  |
-| v3-... | (ollama) | v3 |  |  |  |  |  |
-| v3-... | (ollama) | v3 |  |  |  |  |  |
-| v4-local |  |  |  |  |  |  |  |
-| v5-local |  |  |  |  |  |  |  |
+| v4 | llama3.2:3b (Ollama) | v4 | 0.15 | 0.35 | 0.15 | 0 | runs\v4_B_base_ollama_20261110T161508467025.json |
+|||||||||
 
 Lỗi đặc thù của model nhỏ (đếm từ run JSON):
 
