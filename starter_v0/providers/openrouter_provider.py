@@ -13,4 +13,6 @@ class OpenRouterProvider(OpenAIProvider):
             api_key_env="OPENROUTER_API_KEY",
             base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
             default_model="openai/gpt-4o-mini",
+            # Without a cap OpenRouter reserves the model's full output (16k) and returns 402 on low-credit keys.
+            max_tokens=int(os.getenv("OPENROUTER_MAX_TOKENS", "2048")),
         )

@@ -24,7 +24,7 @@ Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc 
 
 > Dán link public để team khác mở thử ngay. Cách deploy nhanh bằng Cloudflare Tunnel xem README. Nếu deploy Vercel/Streamlit Cloud thì dán link đó.
 >
-> URL: https://appointed-outsourcing-reconstruction-stretch.trycloudflare.com
+> URL: https://implications-unable-boost-max.trycloudflare.com
 
 ## A2. Tool agent có
 
