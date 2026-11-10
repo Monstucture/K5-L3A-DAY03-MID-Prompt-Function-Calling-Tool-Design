@@ -190,6 +190,8 @@ Bài làm cá nhân. Phần này ghi những nội dung đã có bằng chứng 
 |---|---|---|---|
 | Công cụ mới: filter_by_keyword | tools/filter_by_keyword/tool.py; runs/v5_B_group_openrouter_20261110T223227783742.json | G11 đạt: AI chọn đúng công cụ và truyền đúng từ khóa; công cụ lọc đúng còn 1 tin | Chỉ xử lý danh sách đã có, không tìm dữ liệu mới; không phân biệt hoa/thường nhưng vẫn phân biệt dấu tiếng Việt |
 | Kiểm thử công cụ mới | tests/test_tools_todo.py | 3 bài kiểm thử đều đạt: dữ liệu bình thường, từ khóa rỗng, dữ liệu tin sai kiểu | Đầu vào không hợp lệ trả thông báo lỗi thay vì làm chương trình dừng |
+| UI Streamlit và hội thoại thật | app.py; transcripts/v5_ui_20261110T232625564761.transcript.json | Đã trò chuyện 6 lượt và lưu bản ghi; có gọi công cụ hỏi lại | Vẫn có câu trả lời dùng thời gian cũ; lượt 6 chọn social_search không phù hợp và gặp HTTP 403; chưa có link dùng thử công khai |
+| UI Streamlit và hội thoại thật | app.py; transcripts/v5_ui_20261110T232625564761.transcript.json | Ghi nhận 11 lượt hội thoại; đọc trang web, lọc đúng 2 tin và tìm kiếm web đúng tham số ở các lượt thử mới | Còn lỗi chọn công cụ ở lượt 6; lượt 7 hỏi lại bằng văn bản thay vì gọi clarify; lượt 10 thêm diễn giải ngoài dữ liệu gốc; chưa có link dùng thử công khai |
 
 ### Chi tiết kiểm thử
 
@@ -201,12 +203,6 @@ Bài làm cá nhân. Phần này ghi những nội dung đã có bằng chứng 
 
 ## B6. Reflection
 
-- Which fixes belonged in `system_prompt.md`?
-- Which fixes belonged in `tools.yaml`?
-- Which failure needed manual review instead of automatic grading?
-- What would you improve next?
-## B6. Reflection
-
 1. Những lỗi cần sửa trong system_prompt.md
 Thêm hướng dẫn hỏi lại khi chưa đủ thông tin, không dự đoán tham số, không gọi thêm công cụ khác,yêu cầu xác nhận trước khi gửi 
 
@@ -216,10 +212,20 @@ khai báo công cụ mới, mô tả chức năng của công cụ mới để a
 3. Trường hợp cần xem xét thủ công
 cần đọc cả lời gọi công cụ và kết quả khi chọn công cụ, nếu Ai gọi thêm công cụ khác không cần thiết mà bị báo lỗi 403 thì ghi nhận cả 2 lỗi gọi thừa và lỗi truy cập.
 
-### 4. Những việc cần cải thiện tiếp
+4. Những việc cần cải thiện tiếp
 chạy v5 g6 và g8 gọi thêm công cụ không cần thiết. cần xem lại hướng dẫn dùng công cụ và thông tin mới nhất trong hội thoại , giới hạn lời gọi công cụ.
 
 Công cụ mới filter_by_keyword đã vượt qua 3 kiểm thử và tình huống G11. Kết quả này chỉ chứng minh các trường hợp đã kiểm tra, chưa bảo đảm công cụ đúng với mọi đầu vào.
+
+--> Nhận xét từ hội thoại thật
+
+Giao diện đã thực hiện được chuỗi hỏi bổ sung đường dẫn,
+đọc trang web, lọc tin bằng công cụ mới và tìm kiếm web.
+
+Cần cải thiện việc gọi clarify khi thiếu thông tin,
+chọn đúng công cụ tìm kiếm và chỉ tóm tắt theo dữ liệu có sẵn.
+Kết quả hội thoại thật cho thấy vẫn có lỗi dù bộ đánh giá
+trước đó từng đạt 100%.
 
 ## B7. Small Local Model Challenge (bonus)
 
