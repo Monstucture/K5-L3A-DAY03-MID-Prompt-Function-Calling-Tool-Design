@@ -1,0 +1,385 @@
+{
+  "run_id": "v3_B_group_openrouter_20261110T111605949458",
+  "version": "v3",
+  "artifact_version": "v3+p75910b24abd1+t8db0ba629f52",
+  "prompt_hash": "75910b24abd1acecaaeb566a4c8d74146f66fecd29556b56f4d0d60a3c7dfdb8",
+  "tools_hash": "8db0ba629f52ad1ec171bae4e4e84472c12f950fa1a6db5e1d27bad6e749b740",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "/Users/phucqn/Documents/Default Project/K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design/starter_v0/artifacts/system_prompt.md",
+  "tools": "/Users/phucqn/Documents/Default Project/K5-L3A-DAY03-MID-Prompt-Function-Calling-Tool-Design/starter_v0/artifacts/tools.yaml",
+  "eval_cases": "data/eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
+  "generated_at": "2026-11-10T11:16:05",
+  "summary": {
+    "total_cases": 5,
+    "measured_cases": 5,
+    "provider_error_cases": 0,
+    "passed_cases": 3,
+    "case_accuracy": 0.6,
+    "tool_routing_accuracy": 0.6,
+    "argument_accuracy": 0.6,
+    "multiturn_accuracy": null,
+    "failure_counts": {
+      "wrong_boundary": 1,
+      "missing_info": 1
+    },
+    "observed_mismatch_counts": {
+      "missing_tool_call": 2
+    }
+  },
+  "results": [
+    {
+      "id": "R15_routing_web_not_twitter",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_web_news",
+        "difficulty": "medium",
+        "what_it_tests": "Cụm 'tìm trên web tin tức' → lookup/web_search."
+      },
+      "input": "Tìm trên web tin tức gần đây về OpenAI",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI",
+              "topic": "news"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "OpenAI",
+            "topic": "news",
+            "timeframe": "day",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "OpenAI",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "OpenAI",
+                "url": "https://tavily.com/knowledge/company/p4PyTakV77G9",
+                "source": "tavily.com",
+                "summary": "# OpenAI\nID: p4PyTakV77G9\nWebsite: www.openai.com\nHeadquarters: San Francisco, CA, United States\nLinkedIn: www.linkedin.com/company/openai · 11,529,792 followers\nIndustry: Research Services\nIndustry codes: SIC 87, 873, NAICS 54, 541\nCompany type: Partnership\nSocial profiles: www.facebook.com/openai, www.twitter.com/openai, www.crunchbase.com/organization/openai, www.instagram.com/openai.gpt, www.instagram.com/openai, www.youtube.com/@openai, www.youtube.com/openai, github.com/openai [...] Description: OpenAI is a company that believes in research and development to lead to artificial general intelligence, a system that can solve human-level problems. [...] ## Products and services\nKeywords: research & development, emerging ai software, openai, artificial intelligence machine learning, artificial general intelligence, development, research, human-level problems, technology, application-software, artificial-intelligence, platform",
+                "score": 0.90593183
+              },
+              {
+                "title": "OpenAI Tries to Ease Backlash Against AI Data Centers",
+                "url": "https://www.bankinfosecurity.com/openai-hopes-to-ease-backlash-against-ai-data-centers-a-33327",
+                "source": "bankinfosecurity.com",
+                "summary": "OpenAI is promising to pay for the power costs accrued by its data centers and give communities more say over construction. The list of commitments came two days after midterm election results favored candidates that opposed the data center buildout aimed at supporting the growing artificial intelligence industry.\n\nSee Also: Frictionless Security: How AI is Redefining Access in Highly Regulated Industries [...] For enterprise technology leaders, the announcements are a mixed bag. OpenAI is attempting to ensure it has access to the compute it will need to grow by assuaging the concerns of communities that are increasingly saying no to data center expansion, but for businesses that are still trying to formulate their AI strategy, OpenAI's compact doesn't offer much certainty. [...] The compact outlined locally tailored agreements for future OpenAI campuses, community input into development plans and annual public progress reports. OpenAI said it will cover the electricity it consumes and the incremental infrastructure costs required to serve its sites. It will also provide financial assurances before major spending begins to protect other utility customers if a project is delayed, reduced or canceled.",
+                "score": 0.62934244
+              },
+              {
+                "title": "New lawsuit alleges conspiracy in Effingham County OpenAI land sale - The Current",
+                "url": "https://thecurrentga.org/2026/11/09/new-lawsuit-alleges-conspiracy-in-effingham-county-openai-land-sale",
+                "source": "thecurrentga.org",
+                "summary": "The lawsuit recounts how the negotiations between these officials and the tech company known for developing ChatGPT evolved, citing many facts revealed by The Current GA since the deal was made public in July. The terms of the deal include approximately $870 million in tax revenue over 15 years from OpenAI, as well as the company investing $4 billion and creating 80 jobs during each of the five phases of construction from 2028 to 2034, according to the memorandum of understanding. [...] This is the third lawsuit related to OpenAI’s arrival in the community.  In early September, the same group of plaintiffs sued the county, asking a judge to invalidate the data center zoning. Later that month, residents and environmental group One Hundred Miles asked a judge to throw out the development authority’s deals with the software company’s affiliate. [...] The Current\n\nThe Current\n\nIn-Depth Journalism for Coastal Georgia\n\n# New lawsuit alleges conspiracy in Effingham County OpenAI land sale\n\nAvatar photo\n\n### Share this:\n\nJustin Taylor/The Current GA/CatchLight/Report for America\n\nEffingham County residents allege in a new lawsuit that local elected officials, public employees and others conspired illegally and secretly to lay the groundwork for a data center to the benefit of OpenAI, spoiling land values for everybody else.",
+                "score": 0.53619206
+              },
+              {
+                "title": "As brands dive into ChatGPT, OpenAI will let them track their mentions - Tubefilter",
+                "url": "https://www.tubefilter.com/2026/11/09/brand-mention-chatbot-chatgpt-openai-mentions",
+                "source": "tubefilter.com",
+                "summary": "Subscribe\n\nFrom a marketing standpoint, that’s a rudimentary level of analytics, but by showing brands their ChatGPT mentions, OpenAI can give them tangible evidence of the results of any marketing pushes they make on the platform. As answer engine optimization becomes a valuable marketing category — and the firms running AEO campaigns haul in big funding rounds — OpenAI is bringing improved measurement to that ecosystem. [...] Fast forward a few months, and AEO is now gaining favor. A recent report from AI search analytics platform Peec AI showed that YouTube videos show up far more frequently in chatbot responses and Google’s AI Search Overview when the descriptions of those videos receive edits. The message is clear: Tech companies want brands to play around with major chatbots, and OpenAI is equipping those brands with the metrics they need to analyze their experiments. [...] If AI chatbots are going to remain a relevant touchpoint for marketers, then agencies and brands need access to the same analytics they use in their other campaigns. Rumor has it that OpenAIis developing new tools in that area, potentially creating new opportunities for advertisers on ChatGPT.",
+                "score": 0.53342235
+              },
+              {
+                "title": "Australia to mandate AI breach reporting, create regulator after OpenAI breach | Reuters",
+                "url": "https://www.reuters.com/world/australia-tightens-ai-oversight-rules-after-openai-agent-breached-government-2026-11-10",
+                "source": "reuters.com",
+                "summary": "OpenAI has said it learned of the breach only in August ​and that the incident was unintentional. Its review found no evidence that patient records were accessed by ‌the ⁠agent.\n\nThe breach has added to friction between Australia and US technology companies, after Canberra refused ChatGPT maker OpenAI and rival Anthropic exemptions from copyright laws for model training, instead requiring them to negotiate licensing agreements with Australian rights holders. [...] The OpenAI agent gained unauthorised access to the medical statistics portal ​of Medicare, Australia's universal health insurance programme, while conducting research on public medical ​spending, the government said in September. The breach triggered a rapid ⁠government review into the incident.\n\nThe Misinformation Monitor newsletter rounds up international misinformation narratives, with a \"Real or Fake?\" quiz in every edition. Sign up here. [...] SYDNEY, Nov 10 (Reuters) - Australia will require artificial intelligence companies to report breaches ‌and consider changes to criminal law to address \"serious misconduct\", Prime Minister Anthony Albanese said on Tuesday, after an OpenAI agent broke into a government website.",
+                "score": 0.40924495
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R16_arg_timeframe_month",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_timeframe",
+        "difficulty": "medium",
+        "what_it_tests": "'trong tháng này' → timeframe=month."
+      },
+      "input": "Tin công nghệ trong tháng này",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "tin công nghệ",
+              "topic": "news",
+              "timeframe": "month",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "tin công nghệ",
+            "topic": "news",
+            "timeframe": "month",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "tin công nghệ",
+            "topic": "news",
+            "timeframe": "month",
+            "items": [
+              {
+                "title": "Op-Ed: Tin hit by AI stock rout despite physical market tightness - Mining.com",
+                "url": "https://www.mining.com/web/op-ed-tin-hit-by-ai-stock-rout-despite-physical-market-tightness/",
+                "source": "mining.com",
+                "summary": "Micro Gold Futures $ 4073 / ozt  -0.61%. Micro Silver Futures $ 51.955 / ozt  0.25%. Gold Futures $ 4073.2 / ozt  -0.62%. Tin, which had been riding the AI wave on the back of its use as an electronic solder, has taken a particularly hard knock after Wall Street lost $3.2 trillion in a single session on Thursday as investors feared Democrats could slow the buildout of AI data centers. London Metal Exchange (LME) three-month tin CMSN3 has slumped from over $50,000 per metric ton to an eight-month low of $45,360 in the space of a week. The bursting of tin’s AI-investment bubble is ironically ill-timed since the market is the tightest it’s been in many months. The benchmark cash-to-three-months spread CMSN0-3 was in a deep contango, with prompt tin at a discount of more than $350 per ton to three-month delivery in August. Off-warrant inventory has also fallen to 1,089 tons, down 1,535 tons since the start of the year.",
+                "score": 0.1666079
+              },
+              {
+                "title": "Cornish Metals raises $181m to fund South Crofty tin project in UK - Mining Technology",
+                "url": "https://www.mining-technology.com/news/cornish-metals-181m-fund-south-crofty/",
+                "source": "mining-technology.com",
+                "summary": "# Cornish Metals raises $181m to fund South Crofty tin project in UK. Cornish Metals has completed a fundraising round, securing £135m ($181m) before expense through the issue of 225 million new ordinary shares to support the South Crofty tin project in Cornwall, UK. The fundraising structure involved a conditional placing of 33,977,873 shares, generating £20.4m, a conditional subscription for 181,002,661 shares that raised £108.6m and the conditional issuance of 10,019,466 shares under a retail offer, bringing in £6m. Cornish Metals focuses on mineral exploration and development in the UK, with its primary efforts centred on the wholly owned and permitted South Crofty tin project. Cornish Metals CEO Don Turvey said: “We are delighted to have completed this fundraise, which completes the financing package for the construction of South Crofty through to first tin in mid-2028. “I would like to thank our existing shareholders, Vision Blue and the National Wealth Fund, for their continued support, and to welcome our new investors, including our offtake partner Glencore and Leonidsport.",
+                "score": 0.16644524
+              },
+              {
+                "title": "Cornish Metals faces costly financing hurdle - Mining.com",
+                "url": "https://www.mining.com/cornish-metals-faces-costly-financing-hurdle/",
+                "source": "mining.com",
+                "summary": "Henry Lazenby | October 20, 2026 | 11:51 am  News Europe Tin. South Crofty tin project in the UK. Cornish Metals (AIM: TIN) is seeking £135 million ($180 million) through a deeply discounted share sale to unlock financing for its South Crofty tin mine’s restart, warning it could be unable to pay its debts if the deal fails. The equity sale would release $210 million of bond financing held in escrow, subject to other conditions. It puts a price on a funding problem that Cornish has disclosed for months: Shareholders face substantial dilution to advance the project, even with backing from Glencore (LSE: GLEN) and Britain’s National Wealth Fund. Glencore has conditionally agreed to invest £11.2 million and signed an agreement to buy all South Crofty’s tin concentrate for six years from commercial production. Cornish’s funding plan allocates £185 million to project capital spending, £55 million to converting existing shareholder loans and accrued interest into equity and £32 million to bond interest during construction and the production ramp-up.",
+                "score": 0.1238843
+              },
+              {
+                "title": "Alphamin directs Congo tin to new US smelter - Mining.com",
+                "url": "https://www.mining.com/alphamin-directs-congo-tin-to-new-us-smelter/",
+                "source": "mining.com",
+                "summary": "Micro Gold Futures $ 4147.7 / ozt  1.79%. Gold Futures $ 4147.7 / ozt  1.80%. # Alphamin directs Congo tin to new US smelter. Henry Lazenby | November 9, 2026 | 2:28 pm  Base Metals News Africa United States Tin. Processing facilities at Alphamin Resources’ Bisie tin mine in eastern Democratic Republic of Congo. Alphamin Resources (TSXV: AFM; JSE: APH) has agreed to supply a new U.S. smelter with tin concentrate from the Democratic Republic of Congo, diversifying its sales as Washington backs domestic minerals processing. The material is destined for U.S. refiner Nathan Trotter & Co.’s $65-million (C$92 million) smelter in Virginia, which targets first production next year, Mauritius-based Alphamin said Monday. “Alphamin has been actively seeking to diversify its customer base and to support the development of western tin refining capacity,” the company said in a release. The allocation would account for up to 18% of Bisie’s targeted annual output, linking an established African mine to new U.S. processing capacity.",
+                "score": 0.12255495
+              },
+              {
+                "title": "Elementos clears land hurdle at Oropesa Tin Project - Mining.com.au",
+                "url": "https://mining.com.au/elementos-clears-land-hurdle-at-oropesa-tin-project/",
+                "source": "mining.com.au",
+                "summary": "* Elementos clears land hurdle at Oropesa Tin Project. Elementos (ASX:ELT) has secured a general interest declaration for its Oropesa Tin Project in Spain, bringing it closer to its principal environmental permit. In granting the status, the regional government cited Oropesa’s importance to the national economy, tin’s status as a priority raw material for Spain, and the project’s role in reducing dependence on imported tin. *“The board welcomes this declaration, which provides further material administrative certainty as we progress project financing and offtake discussions towards a final investment decision, construction, and, ultimately, operations at Oropesa,”* David adds.",
+                "score": 0.094518974
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R17_confirm_before_send_post",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "confirm_before_write",
+        "difficulty": "medium",
+        "what_it_tests": "Hành động đăng/gửi lên Telegram → phải xác nhận yes_no trước, không tự đăng."
+      },
+      "input": "Đăng bài viết này lên Telegram giúp mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "text": "Đăng bài viết này lên Telegram giúp mình"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_boundary",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call send"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "send",
+          "args": {
+            "text": "Đăng bài viết này lên Telegram giúp mình"
+          },
+          "result": {
+            "tool": "send_telegram",
+            "status": "needs_confirmation",
+            "message": "Only send after the user explicitly confirms."
+          }
+        }
+      ]
+    },
+    {
+      "id": "R18_out_of_scope_poem",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope_creative",
+        "difficulty": "easy",
+        "what_it_tests": "Yêu cầu sáng tác nội dung ngoài phạm vi research → KHÔNG gọi tool, từ chối lịch sự."
+      },
+      "input": "Viết cho tôi một bài thơ về mùa thu",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Xin lỗi, nhưng tôi không thể giúp bạn với yêu cầu này.",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "R19_missing_url",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clarify_missing_url",
+        "difficulty": "medium",
+        "what_it_tests": "Nói 'bài viết này' nhưng không có link → phải clarify xin URL, không đoán bừa."
+      },
+      "input": "Tóm tắt bài viết này giúp tôi",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com/article"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call fetch"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://example.com/article"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://example.com/article",
+            "items": [
+              {
+                "title": "Example Domain",
+                "url": "https://example.com/article",
+                "source": "example.com",
+                "summary": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.\n\nهذا النطاق مُخصص للاستخدام في أمثلة التوثيق دون الحاجة إلى إذن. هذه ليست خدمة، يُرجى تجنب الاعتماد عليها لأغراض الاختبار والمراقبة.\n\n该域名仅用于文档示例，无需获得许可。这并非一项服务，请勿将其用于测试和监控目的。\n\nL’usage de ce domaine est réservé à des exemples de documentation, sans autorisation préalable. Il ne s’agit pas d’un service ; son utilisation à des fins de test ou de surveillance est à éviter.\n\nДанный домен предназначен для использования в примерах документации без необходимости получения предварительного разрешения. Это не сервис; не рекомендуется его использование для тестирования и мониторинга.\n\nEste dominio está destinado al uso en ejemplos de documentación sin necesidad de permiso. Esto no es un servicio; evitar utilizarlo para realizar pruebas o monitoreos.\n\n [Learn more](https://iana.org/help/example-domains)"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
