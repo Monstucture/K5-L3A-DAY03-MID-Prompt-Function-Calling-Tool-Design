@@ -105,10 +105,10 @@ Only fill if your team did bonus.
 
 | Bonus | Evidence File | What Worked | Risk / Guardrail |
 |---|---|---|---|
-| send (Telegram) |  |  |  |
-| arXiv/company policy |  |  |  |
-| UI |  |  |  |
-| Tool unit tests (`tests/`) | `pytest` output |  |  |
+| send (Telegram) | transcripts/v4_openai_20261110T150658051780.transcript.json | Mình hỏi agent tìm tin và tóm tắt tin để gửi telegram | In transcript agent hỏi confirm gửi chứ không gửi tự động thông tin lên telegram |
+| arXiv/company policy | runs/v4_B_extension_openrouter_<time>.json  | Routing to policy / papers / paper_text, and combined calls | arXiv có thể return 429, thì tool đợi ≥3s between requests and reports errors nếu xảy ra |
+| UI | api/chat.py, public/index.html, link in A1, logs/demo_chat.jsonl, screenshot | Chat trên web có UI thấy tools được gọi và quy trimh2 | Độ dài msg được capped at 2000 characters |
+| Tool unit tests (`tests/`) | `pytest` output | 89 passed, 0 skipped: 17 TODO tests + papers + the new |  Chạy offline ko xài API|
 
 Tool unit tests: số test đã viết, số bug tìm được trong tool có sẵn (nếu có), và một ví dụ lỗi mà unit test bắt được nhưng eval không bắt được.
 
