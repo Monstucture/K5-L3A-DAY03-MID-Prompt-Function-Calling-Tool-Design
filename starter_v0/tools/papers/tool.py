@@ -41,11 +41,18 @@ def _arxiv_get(url: str, *, params: dict[str, Any] | None = None) -> requests.Re
     return last_response
 
 
+_STOPWORDS = {"of", "the", "and", "or", "for", "in", "on", "to", "an", "with", "by", "at", "from", "is", "are", "about"}
+
+
 def _arxiv_search_query(query: str) -> str:
     cleaned = " ".join((query or "").split())
     if ":" in cleaned:
         return cleaned
-    terms = [term for term in re.findall(r"[A-Za-z0-9_\\-]+", cleaned) if len(term) > 1]
+    # arXiv never matches stopwords, so "all:of" would turn "chain of thought" into 0 results.
+    terms = [
+        term for term in re.findall(r"[A-Za-z0-9_\\-]+", cleaned)
+        if len(term) > 1 and term.lower() not in _STOPWORDS
+    ]
     return " AND ".join(f"all:{term}" for term in terms[:8]) or cleaned
 
 
