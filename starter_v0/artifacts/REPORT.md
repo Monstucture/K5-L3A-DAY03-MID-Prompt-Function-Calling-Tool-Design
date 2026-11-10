@@ -60,10 +60,10 @@ Fill from `artifacts/version_log.csv` and `runs/*.json`.
 
 | Version | Changed Artifact | Hypothesis | Metric Before | Metric After | Run File |
 |---|---|---|---:|---:|---|
-| v0 | nothing | fail ở những test case khó hoặc trả lời trực tiếp | NaN | 0.65 |  |
-| v1 |  |  |  | |  |
-| v2 |  |  |  |  |  |
-| v3 |  |  |  |  |  |
+| v0 | baseline | | 0.65 |0.65  |runs/v0_B_base_openrouter_20261110T094315317596.json  |
+| v1 |  When the user wants to send, post, or publish something,keep the query origin. And just go ahead and do it so they don't have to wait.| điều chỉnh system_prompt.md nhằm cải thiện hành vi gọi tool: thêm "keep the query origin" để giữ nguyên khái niệm chính; kết quả run này chưa cho thấy cải thiện case_accuracy so với baseline v0 ban đầu.| 0.65 |  0.65|runs/v1_B_base_openrouter_20261110T103456870738.json  |
+| v2 |  When the user wants to send, post, or publish something,keep the query origin. If the question is not research or news, politely decline to answer. And just go ahead and do it so they don't have to wait.| điều chỉnh system_prompt.md nhằm cải thiện hành vi gọi tool: thêm "If the question is not research or news politely decline to answer." để khắc phục lỗi out_of_scope; kết quả tăng case_accuracy từ 0.65 lên 0.75 và không còn lỗi out_of_scope so với v1 hiện tại. |0.65  | 0.75 |runs/v2_B_base_openrouter_20261110T103945888972.json  |
+| v3 |  When the user wants to send, post, or publish something,keep the query origin. If the question is not research or news, politely decline to answer. Never guess when it comes to required parameters. And just go ahead and do it so they don't have to wait.|điều chỉnh system_prompt.md nhằm giảm lỗi còn lại của v2; case_accuracy tăng từ 0.75 lên 0.80 nhưng tool_routing_accuracy giảm. | 0.75 |0.80  |runs/v3_B_base_openrouter_20261110T104302703063.json  |
 | v4 | Fomat prompt add limit đổi rule set trong file `system_prompt.md` | Cho thêm rule với boundry, limit thì sẽ giảm rủi ro AI tự bịa | 0.85 | 1 | 
 
 ## B2. Failure Analysis
@@ -89,8 +89,11 @@ List the 10 cases added to `data/eval_group.json` (5 single turn + 5 multi turn)
 
 | Case ID | What It Tests | Expected Tool/Behavior | Result |
 |---|---|---|---|
-|  |  |  |  |
-
+| R15_routing_web_not_twitter |  Cụm 'tìm trên web tin tức' → lookup/web_search.|  lookup|  PASS|
+|  R16_arg_timeframe_month|'trong tháng này' → timeframe=month.|lookup|PASS|
+| R17_confirm_before_send_post| Hành động đăng/gửi lên Telegram → phải xác nhận yes_no trước, không tự đăng.| clarify|WRONG|
+|R18_out_of_scope_poem|Yêu cầu sáng tác nội dung ngoài phạm vi research → KHÔNG gọi tool, từ chối lịch sự.|no tool|PASS|  
+| R19_missing_url|Nói 'bài viết này' nhưng không có link → phải clarify xin URL, không đoán bừa.|clarify|FAIL|
 ## B4. Live Chat Evidence
 
 Use `transcripts/*.transcript.json`.
