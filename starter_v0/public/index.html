@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research Agent Demo</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 760px; margin: 0 auto; padding: 16px; background: #f6f7f9; color: #1d1f23; }
+  h1 { font-size: 1.3rem; margin: 0 0 12px; }
+  #log { display: flex; flex-direction: column; gap: 10px; min-height: 50vh; }
+  .msg { padding: 10px 12px; border-radius: 10px; white-space: pre-wrap; line-height: 1.45; }
+  .user { align-self: flex-end; background: #2457d6; color: #fff; max-width: 80%; }
+  .agent { align-self: flex-start; background: #fff; border: 1px solid #dde1e7; max-width: 90%; }
+  .tools { font: 12px ui-monospace, monospace; color: #555; margin-top: 6px; }
+  .error { border-color: #d33; color: #a00; }
+  form { display: flex; gap: 8px; position: sticky; bottom: 0; background: #f6f7f9; padding: 12px 0; }
+  input { flex: 1; padding: 10px; font-size: 1rem; border: 1px solid #c4c9d2; border-radius: 8px; }
+  button { padding: 10px 16px; font-size: 1rem; border: 0; border-radius: 8px; background: #2457d6; color: #fff; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: wait; }
+</style>
+</head>
+<body>
+<h1>Research Agent Demo</h1>
+<main id="log" aria-live="polite"></main>
+<form id="form">
+  <label for="input" hidden>Message</label>
+  <input id="input" autocomplete="off" placeholder="Ví dụ: Tìm tin mới về AI agents tuần này" required>
+  <button id="send">Gửi</button>
+</form>
+<script>
+const log = document.getElementById("log"), form = document.getElementById("form"),
+      input = document.getElementById("input"), send = document.getElementById("send");
+const history = [];
+
+function add(cls, text, tools) {
+  const div = document.createElement("div");
+  div.className = "msg " + cls;
+  div.textContent = text;
+  if (tools && tools.length) {
+    const t = document.createElement("div");
+    t.className = "tools";
+    t.textContent = tools.map(c => "🔧 " + c.name + "(" + JSON.stringify(c.args) + ")").join("\n");
+    div.appendChild(t);
+  }
+  log.appendChild(div);
+  div.scrollIntoView({ block: "end" });
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const message = input.value.trim();
+  if (!message) return;
+  add("user", message);
+  input.value = "";
+  send.disabled = true;
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, history }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || res.statusText);
+    add("agent", data.reply || "(no reply)", data.tool_calls);
+    history.push({ role: "user", content: message }, { role: "assistant", content: data.reply || "" });
+  } catch (err) {
+    add("agent error", "Lỗi: " + err.message);
+  } finally {
+    send.disabled = false;
+    input.focus();
+  }
+});
+</script>
+</body>
+</html>
