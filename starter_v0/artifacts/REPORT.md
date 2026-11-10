@@ -101,7 +101,10 @@ Use `transcripts/*.transcript.json`.
 
 | Turn | User Request | Tool Calls | Version Evidence | Outcome |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| 1 |  What's the hotest news in tech today|  lookup|transcripts/v4_openai_20261110T150658051780.transcript.json  |  Trả về 5 bài viết và link tương ứng|
+|2|Make a short digest newsletter from these|format|transcripts/v4_openai_20261110T150658051780.transcript.json|Trả về 5 tin với summary ngắn gọn hơn|
+|3|Send this digest to Telegram| clarify| transcripts/v4_openai_20261110T150658051780.transcript.json|Trả về câu hỏi xác nhận yes_no|  
+| 4|Yes, send it|send|transcripts/v4_openai_20261110T150658051780.transcript.json|Gửi tin lên telegram và trả về bản tin đã được gửi|
 
 ## B5. Bonus Evidence
 
